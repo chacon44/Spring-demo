@@ -1,16 +1,16 @@
 package com.demo;
 
 import com.demo.config.ApplicationConfig;
-import com.demo.service.OutputService;
+import com.demo.service.GreetingService;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Application {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-        OutputService outputService = context.getBean(OutputService.class);
-            outputService.generateOutput("");
+        GreetingService greetingService = context.getBean(GreetingService.class);
+        greetingService.getGreeting("Hello, World!");
 
     }
 }

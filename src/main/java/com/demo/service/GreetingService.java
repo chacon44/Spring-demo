@@ -9,7 +9,9 @@ public class GreetingService {
         this.greeting = greeting;
     }
 
-    public String getGreeting(String name){
-        return greeting + " " + name;
+    public String getGreeting(String greeting){
+        System.out.println(greeting);
+        return greeting;
     }
+
 }
