@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Value("Hello, world!")
-    private String greeting;
+    public String greeting;
 
     @Autowired
     private GreetingService greetingService;
