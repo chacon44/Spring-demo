@@ -1,6 +1,10 @@
 package com.demo.service;
 
-public class GreetingService {
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class GreetingService implements ApplicationListener {
 
     private final String greeting;
 
