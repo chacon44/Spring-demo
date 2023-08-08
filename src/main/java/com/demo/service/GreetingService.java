@@ -4,12 +4,12 @@ public class GreetingService {
 
     private final String greeting;
 
-    public GreetingService(String greeting){
+    public GreetingService(String greeting) {
         super();
         this.greeting = greeting;
     }
 
-    public String getGreeting(String greeting){
+    public String getGreeting(String greeting) {
         System.out.println(greeting);
         return greeting;
     }
