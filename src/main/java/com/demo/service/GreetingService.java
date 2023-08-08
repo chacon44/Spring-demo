@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -18,4 +19,8 @@ public class GreetingService implements ApplicationListener {
         return greeting;
     }
 
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+
+    }
 }
