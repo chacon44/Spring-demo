@@ -12,7 +12,7 @@ public class MyWebAppInitializer implements WebApplicationInitializer {
     @Override
     public void onStartup(ServletContext container) {
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation("com.example.app.config");
+        context.setConfigLocation("com.demo.config");
 
         container.addListener(new ContextLoaderListener(context));
 
