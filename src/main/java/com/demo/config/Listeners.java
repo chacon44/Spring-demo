@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component("demo project")
 public class Listeners {
-
     @Autowired
     private GreetingService greetingService;
 
