@@ -1,16 +1,12 @@
 package com.demo;
 
-import com.demo.config.ApplicationConfig;
-import com.demo.service.GreetingService;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.demo.config.ReturnMessage;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Application {
-    public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-        GreetingService greetingService = context.getBean(GreetingService.class);
-        greetingService.getGreeting("Hello, World!");
-
+    public static void main(String[] args) throws JsonProcessingException {
+        ReturnMessage bean = new ReturnMessage("Hello, world");
+        System.out.println(new ObjectMapper().writeValueAsString(bean));
     }
 }
