@@ -1,5 +1,6 @@
 package com.demo.config;
 
+
 import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class ReturnMessage {
