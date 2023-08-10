@@ -2,6 +2,7 @@ package com.demo.controllers;
 
 
 import com.demo.dto.GreetingResponse;
+import com.demo.service.GreetingService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -10,7 +11,7 @@ public class RestController {
     @RequestMapping(value = "/demo", method = RequestMethod.GET, produces = {"application/json"})
 
     public GreetingResponse greeting() {
-        return new GreetingResponse("Hello, world");
+        return new GreetingResponse(GreetingService.getGreeting());
     }
 
 }

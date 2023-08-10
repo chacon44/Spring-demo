@@ -8,4 +8,5 @@ public class GreetingResponse {
     public String getGreeting() {
         return greeting;
     }
+
 }

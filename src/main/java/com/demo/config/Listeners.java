@@ -12,8 +12,8 @@ public class Listeners {
     private GreetingService greetingService;
 
     @EventListener(ContextRefreshedEvent.class)
-    public void eventListener(){
-        greetingService.getGreeting("Hello, World!");
+    public void eventListener() {
+        System.out.println(GreetingService.getGreeting());
     }
 
 }

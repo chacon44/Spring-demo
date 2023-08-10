@@ -2,15 +2,14 @@ package com.demo.service;
 
 public class GreetingService {
 
-    private final String greeting;
+    private static String greeting;
 
     public GreetingService(String greeting) {
         super();
-        this.greeting = greeting;
+        GreetingService.greeting = greeting;
     }
 
-    public String getGreeting(String greeting) {
-        System.out.println(greeting);
+    public static String getGreeting() {
         return greeting;
     }
 
