@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 
 public class ReturnMessage {
 
-    public String action;
     private final String message;
 
-    public ReturnMessage(String act, String mess){
-        this.action = act;
+    public ReturnMessage(String mess){
         this.message = mess;
     }
 
-    @JsonGetter("message")
-    public String greeting() {
+    @JsonGetter("greeting")
+    public String message() {
         return message;
     }
 }

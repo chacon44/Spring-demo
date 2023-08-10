@@ -11,11 +11,7 @@ public class RestController {
 
     @RequestMapping(value = "/demo", method = RequestMethod.GET, produces = {"application/json"})
 
-    private String greeting() throws JsonProcessingException {
-        //ReturnMessage bean = new ReturnMessage("greeting", "Hello, world");
-
-        //return new ObjectMapper().writeValueAsString(bean);
-
-        return "greeting: Hello, world";
+    private ReturnMessage greeting() throws JsonProcessingException {
+        return new ReturnMessage("Hello, world");
     }
 }
