@@ -7,10 +7,10 @@ import java.util.Random;
 
 @Service
 public class RandomAnswerService implements AnswerService {
+    Random random = new Random();
 
     @Override
     public boolean getAnswer() {
-        Random random = new Random();
         return random.nextBoolean();
     }
 }

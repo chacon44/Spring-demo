@@ -21,7 +21,6 @@ public class RestController {
     @Autowired
     private RandomAnswerService answerSupplierService;
     @RequestMapping(value = "/demo", method = RequestMethod.GET, produces = {"application/json"})
-    @Bean
     public RandomAnswer randomAnswer(){
         return new RandomAnswer(answerSupplierService.getAnswer());
     }
