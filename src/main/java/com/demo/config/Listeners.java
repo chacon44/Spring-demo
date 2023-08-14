@@ -8,13 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component("demo project")
 public class Listeners {
-
     @Autowired
     private GreetingService greetingService;
 
     @EventListener(ContextRefreshedEvent.class)
-    public void eventListener(){
-        greetingService.getGreeting("Hello, World!");
+    public void eventListener() {
+        System.out.println(GreetingService.getGreeting());
     }
 
 }
