@@ -6,6 +6,7 @@ import com.demo.dto.RandomAnswer;
 import com.demo.interfaces.Answer;
 import com.demo.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,11 +21,11 @@ public class RestController {
 //    }
 
     @Autowired
-    private Answer answer;
+    private RandomAnswer randomAnswer;
     @RequestMapping(value = "/demo", method = RequestMethod.GET, produces = {"application/json"})
-    public RandomAnswer answer() {
-
-        return answer.getAnswer();
+    @Bean
+    public RandomAnswer randomAnswer(){
+        return new RandomAnswer();
     }
 
 }
