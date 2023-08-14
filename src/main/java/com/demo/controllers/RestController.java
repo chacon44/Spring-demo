@@ -1,10 +1,8 @@
 package com.demo.controllers;
 
 
-import com.demo.dto.GreetingResponse;
 import com.demo.dto.RandomAnswer;
-import com.demo.interfaces.Answer;
-import com.demo.service.GreetingService;
+import com.demo.service.RandomAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +19,11 @@ public class RestController {
 //    }
 
     @Autowired
-    private RandomAnswer randomAnswer;
+    private RandomAnswerService answerSupplierService;
     @RequestMapping(value = "/demo", method = RequestMethod.GET, produces = {"application/json"})
     @Bean
     public RandomAnswer randomAnswer(){
-        return new RandomAnswer();
+        return new RandomAnswer(answerSupplierService.getAnswer());
     }
 
 }

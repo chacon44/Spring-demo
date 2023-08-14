@@ -1,11 +1,13 @@
 package com.demo.dto;
 
-import java.util.Random;
-
 public class RandomAnswer {
 
+    private boolean answer;
+    public RandomAnswer(boolean ans){
+        this.answer = ans;
+    }
+
     public boolean getAnswer() {
-        Random random = new Random();
-        return random.nextBoolean();
+        return answer;
     }
 }
