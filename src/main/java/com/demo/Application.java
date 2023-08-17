@@ -8,5 +8,6 @@ public class Application {
     public static void main(String[] args) throws JsonProcessingException {
         GreetingResponse bean = new GreetingResponse("Hello, world");
         System.out.println(new ObjectMapper().writeValueAsString(bean));
+
     }
 }
