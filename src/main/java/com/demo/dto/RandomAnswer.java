@@ -1,13 +1,5 @@
 package com.demo.dto;
 
-public class RandomAnswer {
+public record RandomAnswer (boolean answer) {
 
-    private boolean answer;
-    public RandomAnswer(boolean ans){
-        this.answer = ans;
-    }
-
-    public boolean getAnswer() {
-        return answer;
-    }
 }

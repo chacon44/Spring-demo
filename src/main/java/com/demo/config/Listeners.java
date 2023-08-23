@@ -13,7 +13,7 @@ public class Listeners {
 
     @EventListener(ContextRefreshedEvent.class)
     public void eventListener() {
-        System.out.println(greetingService.getGreeting());
+        System.out.println(greetingService.greeting());
     }
 
 }

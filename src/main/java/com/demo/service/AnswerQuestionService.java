@@ -1,16 +1,19 @@
 package com.demo.service;
 
+
 import com.demo.dto.RequestDTO;
 import com.demo.interfaces.AnswerService;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
-//Write ("test") in order to identify this service in controllers using qualifiers and referring to "test"
-@Service("test")
-public class RandomAnswerService implements AnswerService {
-    Random random = new Random();
+@Service ("answerQuestions")
+public class AnswerQuestionService implements AnswerService {
 
+    Random random = new Random();
+    RequestDTO question = new RequestDTO("Would i complete this course?");
+
+    //String question = new RequestDTO("Would i complete this course?").toString();
     @Override
     public boolean getAnswer() {
         return random.nextBoolean();
@@ -18,7 +21,7 @@ public class RandomAnswerService implements AnswerService {
 
     @Override
     public RequestDTO getQuestion() {
-        return null;
+        return question;
     }
 
 }
