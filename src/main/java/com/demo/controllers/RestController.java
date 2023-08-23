@@ -20,7 +20,6 @@ public class RestController {
     private GreetingService greetingService;
     @Autowired
     private SavingQuestions savingQuestions;
-
     //return list os services that implements AnswerService interface
 //    @Autowired
 //    List<AnswerService> list;

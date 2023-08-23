@@ -28,11 +28,13 @@ Theory questions
     service. To debug jetty:run you would need to create Run/Debug configuration, that contains it and start it in Debug
     mode: https://www.jetbrains.com/help/idea/run-debug-configuration-maven.html
   * Bonus HARD question: after doing previous question, change code a bit (no need to push changes, just revert them
-    after you are done). Add dependency to your pom.xml: <dependency>
-    <groupId>org.springframework</groupId>
-    <artifactId>spring-tx</artifactId>
-    <version>${spring-version}</version>
-    </dependency> Add @EnableTransactionManagement on top of ApplicationConfiguration class Add @Transactional on top
+    after you are done). Add dependency to your pom.xml: 
+  <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-tx</artifactId>
+      <version>${spring-version}</version>
+  </dependency> 
+    Add @EnableTransactionManagement on top of ApplicationConfiguration class Add @Transactional on top
     of your @Service class. Now run debugger again as you did in previous question and if you did everything correctly,
     than the class in debugger would be different Why? What did Spring did to the class?
 * For subtask 4:
