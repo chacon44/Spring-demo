@@ -40,15 +40,16 @@ Theory questions
 * For subtask 4:
     * What is relationship between @RequestMapping annotation and @PostMapping, @GetMapping, etc? Why does simple
       @RequestMapping even exist?
+      Req
 
-    * What is difference between "produces" and "consumes" values in @RequestMapping and others?
+        * What is difference between "produces" and "consumes" values in @RequestMapping and others?
 
-    * How does Postman communicates type of request body (i. e. JSON, plain text, binary, etc) to server? Would just
-      choosing the proper body type in Postman "Body" tab be enough?
-    * How to override default header in Postman?
-    * What does @RequestBody actually do? What would happen, if you send body with different structure, than it
-      expects? (I. e. response DTO instead of expected request DTO)
-    * Bonus HARD question: assume, that, now HTTP 400 response would also need to have response body in a form of
-      separate ErrorResponseDTO, like this: json { "errorDescription": "Your question is missing or empty" } Java would
-      show
-      an error, if you would try to put an ErrorResponseDTO into ResponseEntity<ResponseDTO>. How can this be resolved?
+        * How does Postman communicates type of request body (i. e. JSON, plain text, binary, etc) to server? Would just
+          choosing the proper body type in Postman "Body" tab be enough?
+        * How to override default header in Postman?
+        * What does @RequestBody actually do? What would happen, if you send body with different structure, than it
+          expects? (I. e. response DTO instead of expected request DTO)
+        * Bonus HARD question: assume, that, now HTTP 400 response would also need to have response body in a form of
+          separate ErrorResponseDTO, like this: json { "errorDescription": "Your question is missing or empty" } Java would
+          show
+          an error, if you would try to put an ErrorResponseDTO into ResponseEntity<ResponseDTO>. How can this be resolved?

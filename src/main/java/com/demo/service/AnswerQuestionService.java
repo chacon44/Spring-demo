@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+
 @Service("answerQuestions")
 public class AnswerQuestionService implements AnswerService {
 
@@ -15,11 +16,9 @@ public class AnswerQuestionService implements AnswerService {
 
     AtomicLong id = new AtomicLong(0);
     long ID = 0;
+
     @Override
-    public long getNewId() {
-        //return id.getAndIncrement();
-        return ID++;
-    }
+    public long getNewId() {return id.getAndIncrement(); }
 
     @Override
     public boolean getAnswer() {

@@ -51,7 +51,7 @@
     * Create new method in controller, that accepts POST requests to the same "/demo" endpoint. Make it accept request
       DTO as POST request body, and use new service method to generate response
     * Make it return HTTP code 400, if request DTO is missing, or question in it is empty string
-    * Use IDEA scratches or https://www.postman.com/product/rest-client/ to test your new endpoint. (as browser can not
+    * Use IA scratches or https://www.postman.com/product/rest-client/ to test your new endpoint. (as browser can not
       easily send POST requests)
     * Completion criteria: after starting the app, sending POST request without body results in 400 and with body
       containing question, results in 200 with answer.
