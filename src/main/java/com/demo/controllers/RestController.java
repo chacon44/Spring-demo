@@ -86,12 +86,7 @@ public class RestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        if(savingQuestions.checkQuestionAndId(id, savingQuestions.getStringQuestion(id))){
-            //if there exist such question with such id
-            savingQuestions.saveQuestions(id, savingQuestions.getStringQuestion(id), requestAnswerDTO.answer());
-            return new ResponseEntity<ResponseDTO>(new ResponseDTO(id, savingQuestions.getStringQuestion(id), requestAnswerDTO.answer()),HttpStatus.OK);
+        else return new ResponseEntity<ResponseDTO>(new ResponseDTO(id, savingQuestions.getStringQuestion(id), requestAnswerDTO.answer()),HttpStatus.OK);
 
-        }
-        else return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
