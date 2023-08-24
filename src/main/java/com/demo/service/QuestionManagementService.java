@@ -18,8 +18,7 @@ public class QuestionManagementService {
         questionsMap.put(responseDTO.id(), answeredQuestion);
     }
     public ResponseDTO returnQuestion(long id){
-        ResponseDTO responseDTO = new ResponseDTO(id, questionsMap.get(id).question(),questionsMap.get(id).answer());
-        return responseDTO;
+        return new ResponseDTO(id, questionsMap.get(id).question(),questionsMap.get(id).answer());
     }
 
     public Optional<AnsweredQuestion> getQuestion(long id) {
