@@ -5,9 +5,11 @@ import com.demo.dto.RequestAnswerDTO;
 import com.demo.dto.RequestDTO;
 import com.demo.dto.ResponseDTO;
 import com.demo.interfaces.AnswerService;
-import com.demo.model.AnsweredQuestions;
+import com.demo.interfaces.IdManagement;
+import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
-import com.demo.service.SavingQuestions;
+import com.demo.service.IdManagementService;
+import com.demo.service.SavingQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,14 @@ import java.util.Optional;
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
+
+    //Services
     @Autowired
     private GreetingService greetingService;
     @Autowired
-    private SavingQuestions savingQuestions;
+    private SavingQuestionService savingQuestionService;
+    @Autowired
+    private IdManagementService idManagementService;
     //return list os services that implements AnswerService interface
 //    @Autowired
 //    List<AnswerService> list;
@@ -32,10 +38,18 @@ public class RestController {
 //    public RandomAnswer randomAnswer() {
 //        return new RandomAnswer(answerService.getAnswer());
 //    }
+
+    //Model classes
+
+    //Interfaces
     @Autowired
     @Qualifier("answerQuestions")
     private AnswerService answerService;
-    private AnsweredQuestions answeredQuestions;
+    private AnsweredQuestion answeredQuestion;
+
+    @Autowired
+    @Qualifier("IdManagement")
+    private IdManagement idManagement;
 
     @GetMapping(value = "/greeting", produces = {"application/json"})
     public GreetingResponse greeting() {
@@ -50,43 +64,36 @@ public class RestController {
         }
         //Create new service that returns entire DTO for this
 
-        if (!savingQuestions.checkQuestion(requestDTO.question())) {
-            long temp_id = answerService.getNewId();
+        if (!savingQuestionService.checkQuestion(requestDTO.question())) {
+            long temp_id = idManagement.getNewId();
             boolean temp_answer = answerService.getAnswer();
-            savingQuestions.saveQuestions(temp_id, requestDTO.question(), temp_answer);
-            return new ResponseEntity<ResponseDTO>(new ResponseDTO(temp_id, requestDTO.question(), temp_answer), HttpStatus.CREATED );
-        }
-        else {
+            savingQuestionService.saveQuestions(temp_id, requestDTO.question(), temp_answer);
+            return new ResponseEntity<>(new ResponseDTO(temp_id, requestDTO.question(), temp_answer), HttpStatus.CREATED);
+        } else {
             return ResponseEntity.status(HttpStatus.FOUND).body(null);
         }
     }
 
     @GetMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> getAnswer(@PathVariable long id) {
-        Optional<AnsweredQuestions> result = savingQuestions.getQuestion(id);
+        Optional<AnsweredQuestion> result = savingQuestionService.getQuestion(id);
         //Did it because of IDEA suggestion
-        return result
-                .map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer())))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable long id) {
-        Optional<AnsweredQuestions> result = savingQuestions.deleteQuestion(id);
-        return result
-                .map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer())))
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        Optional<AnsweredQuestion> result = savingQuestionService.deleteQuestion(id);
+        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
         //Check if there is a question with such id
-        if(savingQuestions.getQuestion(id) == null ||savingQuestions.getQuestion(id).isEmpty()) {
+        if (savingQuestionService.getQuestion(id).isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        else return new ResponseEntity<ResponseDTO>(new ResponseDTO(id, savingQuestions.getStringQuestion(id), requestAnswerDTO.answer()),HttpStatus.OK);
-
+        else
+            return new ResponseEntity<>(new ResponseDTO(id, savingQuestionService.getStringQuestion(id), requestAnswerDTO.answer()), HttpStatus.OK);
     }
 }
