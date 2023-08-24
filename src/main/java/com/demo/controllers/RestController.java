@@ -9,7 +9,7 @@ import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.IdManagementService;
-import com.demo.service.SavingQuestionService;
+import com.demo.service.QuestionManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class RestController {
     @Autowired
     private GreetingService greetingService;
     @Autowired
-    private SavingQuestionService savingQuestionService;
+    private QuestionManagementService questionManagementService;
     @Autowired
     private IdManagementService idManagementService;
     //return list os services that implements AnswerService interface
@@ -62,38 +62,41 @@ public class RestController {
         if (requestDTO.question() == null || requestDTO.question().isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        //Create new service that returns entire DTO for this
 
-        if (!savingQuestionService.checkQuestion(requestDTO.question())) {
-            long temp_id = idManagement.getNewId();
-            boolean temp_answer = answerService.getAnswer();
-            savingQuestionService.saveQuestions(temp_id, requestDTO.question(), temp_answer);
-            return new ResponseEntity<>(new ResponseDTO(temp_id, requestDTO.question(), temp_answer), HttpStatus.CREATED);
-        } else {
+        if (questionManagementService.checkQuestion(requestDTO.question())) {
+            //if question already exists
             return ResponseEntity.status(HttpStatus.FOUND).body(null);
+        } else {
+            //if question is new
+            ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
+            questionManagementService.saveQuestion(responseDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         }
     }
 
     @GetMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> getAnswer(@PathVariable long id) {
-        Optional<AnsweredQuestion> result = savingQuestionService.getQuestion(id);
+        Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
         //Did it because of IDEA suggestion
         return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable long id) {
-        Optional<AnsweredQuestion> result = savingQuestionService.deleteQuestion(id);
-        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        Optional<AnsweredQuestion> result = questionManagementService.deleteQuestion(id);
+        String regex = "--> THIS QUESTION HAS BEEN DELETED"; //to clarify action performed when the object is sent
+        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question().concat(regex), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
-        //Check if there is a question with such id
-        if (savingQuestionService.getQuestion(id).isEmpty())
+        if (questionManagementService.getQuestion(id).isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        else
-            return new ResponseEntity<>(new ResponseDTO(id, savingQuestionService.getStringQuestion(id), requestAnswerDTO.answer()), HttpStatus.OK);
+        else {
+            ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
+            questionManagementService.saveQuestion(responseDTO);
+            return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
+        }
     }
 }

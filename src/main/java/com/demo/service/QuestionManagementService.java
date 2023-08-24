@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
 import org.springframework.stereotype.Service;
 
@@ -8,13 +9,17 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class SavingQuestionService {
+public class QuestionManagementService {
 
     Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
-    public void saveQuestions(long id, String question, boolean answer) {
-        AnsweredQuestion answeredQuestion = new AnsweredQuestion(question, answer);
-        questionsMap.put(id, answeredQuestion);
+    public void saveQuestion(ResponseDTO responseDTO) {
+        AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
+        questionsMap.put(responseDTO.id(), answeredQuestion);
+    }
+    public ResponseDTO returnQuestion(long id){
+        ResponseDTO responseDTO = new ResponseDTO(id, questionsMap.get(id).question(),questionsMap.get(id).answer());
+        return responseDTO;
     }
 
     public Optional<AnsweredQuestion> getQuestion(long id) {
@@ -25,9 +30,6 @@ public class SavingQuestionService {
         return Optional.ofNullable(questionsMap.remove(id));
     }
 
-    public String getStringQuestion(long id){
-        return questionsMap.get(id).question();
-    }
     public boolean checkQuestion(String question) {
 
         return questionsMap
