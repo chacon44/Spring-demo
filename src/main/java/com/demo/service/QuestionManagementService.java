@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class QuestionManagementService {
@@ -17,8 +18,9 @@ public class QuestionManagementService {
         AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
         questionsMap.put(responseDTO.id(), answeredQuestion);
     }
-    public ResponseDTO returnQuestion(long id){
-        return new ResponseDTO(id, questionsMap.get(id).question(),questionsMap.get(id).answer());
+
+    public ResponseDTO returnQuestion(long id) {
+        return new ResponseDTO(id, questionsMap.get(id).question(), questionsMap.get(id).answer());
     }
 
     public Optional<AnsweredQuestion> getQuestion(long id) {
@@ -41,18 +43,15 @@ public class QuestionManagementService {
 
 
     }
-    public ResponseDTO returnMatchedQuestion(String question){
-        final long[] matchedId = {-1L}; // Initialize to a value that won't be used in the map
-        final boolean[] matchedAnswer = {true}; // Initialize to null
 
-        questionsMap.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().question().equals(question))
+    public Optional <ResponseDTO> returnMatchedQuestion(String question) {
+
+        AtomicReference<Optional<ResponseDTO>> matchedResponse = new AtomicReference<>(Optional.empty());
+
+        questionsMap.entrySet().stream().filter(entry -> entry.getValue().question().equals(question)) //search for question
                 .findFirst()
-                .ifPresent(entry -> {
-                    matchedId[0] = entry.getKey();
-                    matchedAnswer[0] = entry.getValue().answer();
-                });
-        return new ResponseDTO(matchedId[0], question, matchedAnswer[0]);
+                .ifPresent( //if question is found
+                        entry -> matchedResponse.set(Optional.of(new ResponseDTO(entry.getKey(), question, entry.getValue().answer()))));
+        return matchedResponse.get();
     }
 }

@@ -1,9 +1,6 @@
 package com.demo.controllers;
 
-import com.demo.dto.GreetingResponse;
-import com.demo.dto.RequestAnswerDTO;
-import com.demo.dto.RequestDTO;
-import com.demo.dto.ResponseDTO;
+import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
@@ -28,20 +25,6 @@ public class RestController {
     private QuestionManagementService questionManagementService;
     @Autowired
     private IdManagementService idManagementService;
-    //return list os services that implements AnswerService interface
-//    @Autowired
-//    List<AnswerService> list;
-    //@Autowired
-    //@Qualifier("test")
-    //private AnswerService answerService;
-//    @RequestMapping(value = "/demo", method = RequestMethod.GET, produces = {"application/json"})
-//    public RandomAnswer randomAnswer() {
-//        return new RandomAnswer(answerService.getAnswer());
-//    }
-
-    //Model classes
-
-    //Interfaces
     @Autowired
     @Qualifier("answerQuestions")
     private AnswerService answerService;
@@ -56,18 +39,17 @@ public class RestController {
         return new GreetingResponse(greetingService.greeting());
     }
 
-    //this post mapping is used t specify that this method should handle post requests.
     @PostMapping(value = "/demo", consumes = {"application/json"}, produces = {"application/json"})
-    ResponseEntity<ResponseDTO> postQuestion(@RequestBody RequestDTO requestDTO) {
+    ResponseEntity<?> postQuestion(@RequestBody RequestDTO requestDTO) {
         if (requestDTO.question() == null || requestDTO.question().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            ErrorDTO errorDTO = new ErrorDTO("Your question is missing or empty");
+
+            return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
         }
 
-        if (questionManagementService.checkQuestion(requestDTO.question())) {
-            //if question already exists
-            //get id, question and answer
-            ResponseDTO responseDTO = questionManagementService.returnMatchedQuestion(requestDTO.question());
-            return ResponseEntity.status(HttpStatus.FOUND).body(responseDTO);
+        Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
+        if (matchedQuestion.isPresent()) {
+            return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
             //if question is new
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
@@ -86,8 +68,7 @@ public class RestController {
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.deleteQuestion(id);
-        String regex = "--> THIS QUESTION HAS BEEN DELETED"; //to clarify action performed when the object is sent
-        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question().concat(regex), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})

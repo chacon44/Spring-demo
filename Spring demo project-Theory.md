@@ -51,5 +51,4 @@ Theory questions
           expects? (I. e. response DTO instead of expected request DTO)
         * Bonus HARD question: assume, that, now HTTP 400 response would also need to have response body in a form of
           separate ErrorResponseDTO, like this: json { "errorDescription": "Your question is missing or empty" } Java would
-          show
-          an error, if you would try to put an ErrorResponseDTO into ResponseEntity<ResponseDTO>. How can this be resolved?
+          show an error, if you would try to put an ErrorResponseDTO into ResponseEntity<ResponseDTO>. How can this be resolved?
