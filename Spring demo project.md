@@ -85,3 +85,58 @@
     * Completion criteria: after starting the app, you could create new question via POST, read it via GET (and
       answer would be still same), change answer via PUT and read again (answer should be as per PUT body) and finally
       remove it via DELETE and new GET would return 404.
+6. Add exceptions and exception handling to your project:
+
+    * Create exception class in your project, that extends RuntimeException. Give it two fields: String description (you
+      can use parent class fields for that) and ErrorCode code, where ErrorCode is new enum.
+    * Create ErrorCode enum with (for now) single value: OUT_OF_IDS. You can add you own error codes for different
+      situations, if you have any ideas for them
+    * In IdManagementService add a condition, that check if current id reached maximum value (for actual logic it
+      should Long.MAX_VALUE, but to be able to test it, let's set it for 5 or 10 for now). If maximum value is reached
+      instead of returning the id, method should throw your new exception with error code OUT_OF_IDS.
+    * Try it in practice and see, how Spring would convert exception into response (probably with HTTP 500), when it
+      happens
+    * Look into https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc
+      and https://reflectoring.io/spring-boot-exception-handling/
+    * You would need to create @ControllerAdvice class, that would work with RestController and would handle your
+      exception instead of default Spring handler
+    * Create new DTO ErrorResponse. It should contains same two fields as your exception, but both of type string:
+
+      ```json
+      {
+      "code": "OUT_OF_IDS",
+      "description": "Unable to generate new ID, maximum value: 10 was reached"
+      }
+      ```
+
+    * Create @ExceptionHandler method in your @ControllerAdvice class, that would convert your exception into 
+    ErrorResponse and return ResponseEntity with HTTP 500 and ErrorResponse as a body.
+    * Next step is to expand your handling capabilities by using ResponseEntityExceptionHandler as a base for your
+      @ConrtollerAdvice class. Remember, that ResponseEntityExceptionHandler already declares handlers, so instead
+      of redeclaring them you override its base methods.
+    * Create new ErrorCode in enum: "WRONG_HTTP_METHOD".
+    * Override ResponseEntityExceptionHandler method to return ErrorResponse with this new code as a body with HTTP
+      405, when user tries to send wrong type of HTTP request method (i. e. do POST /demo/{id} for example)
+
+      7. Add logging to your application:
+
+      * Go through: https://www.baeldung.com/slf4j-with-log4j2-logback and setup logging with SL4J and logback in your
+        application
+      * Test it with some logs to console.
+      * You can look into Lombok and https://projectlombok.org/features/log to use @SL4J annotation to autogenerate
+        logger in your classes.
+      * Look into https://www.baeldung.com/spring-yaml and https://reflectoring.io/spring-boot-profiles/ to see
+        different ways to configure Spring profiles via .yml (in single file or in multiple .yml files). You would need two
+        profile going forward: "dev" and "prod" (development and production. Try to configure IDEA run configuration to start
+        your app in either of them (active profile should be listed in Spring logs during start).
+      * Look into: https://howtodoinjava.com/spring-boot/configure-logging-application-yml/ on how to configure
+        logging via .yml files. This article refers to Spring Boot logging, which relies on logback. That's why we. set our
+        logging through it at the beggining.
+      * Setup logging of INFO and higher logs for prod profile and DEBUG and higher logs for dev profile. You can add
+        other ways to differentiate them (or set logs for different packages, if Spring start to spam too much logs in
+        full debug).
+      * Add your own logs over the project. You need to log each incoming request with INFO, each error with ERROR (
+        errors are those, that result in response with HTTP code different from 2XX) and also add DEBUG logs everywhere they
+        make sense (like id generation, saved questions search, etc).
+      * Test your application via Postman in each of profiles and confirm, that logs are working correctly and you
+        only see debug logs, when dev profile is enabled
