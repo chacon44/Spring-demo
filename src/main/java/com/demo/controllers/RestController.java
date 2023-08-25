@@ -65,7 +65,9 @@ public class RestController {
 
         if (questionManagementService.checkQuestion(requestDTO.question())) {
             //if question already exists
-            return ResponseEntity.status(HttpStatus.FOUND).body(null);
+            //get id, question and answer
+            ResponseDTO responseDTO = questionManagementService.returnMatchedQuestion(requestDTO.question());
+            return ResponseEntity.status(HttpStatus.FOUND).body(responseDTO);
         } else {
             //if question is new
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());

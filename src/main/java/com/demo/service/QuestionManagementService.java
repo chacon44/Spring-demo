@@ -41,4 +41,18 @@ public class QuestionManagementService {
 
 
     }
+    public ResponseDTO returnMatchedQuestion(String question){
+        final long[] matchedId = {-1L}; // Initialize to a value that won't be used in the map
+        final boolean[] matchedAnswer = {true}; // Initialize to null
+
+        questionsMap.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().question().equals(question))
+                .findFirst()
+                .ifPresent(entry -> {
+                    matchedId[0] = entry.getKey();
+                    matchedAnswer[0] = entry.getValue().answer();
+                });
+        return new ResponseDTO(matchedId[0], question, matchedAnswer[0]);
+    }
 }
