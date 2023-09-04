@@ -85,6 +85,7 @@
     * Completion criteria: after starting the app, you could create new question via POST, read it via GET (and
       answer would be still same), change answer via PUT and read again (answer should be as per PUT body) and finally
       remove it via DELETE and new GET would return 404.
+
 6. Add exceptions and exception handling to your project:
 
     * Create exception class in your project, that extends RuntimeException. Give it two fields: String description (you
@@ -98,9 +99,9 @@
       happens
     * Look into https://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc
       and https://reflectoring.io/spring-boot-exception-handling/
-    * You would need to create @ControllerAdvice class, that would work with RestController and would handle your
+    ##* You would need to create @ControllerAdvice class, that would work with RestController and would handle your
       exception instead of default Spring handler
-    * Create new DTO ErrorResponse. It should contains same two fields as your exception, but both of type string:
+    ##* Create new DTO ErrorResponse. It should contains same two fields as your exception, but both of type string:
 
       ```json
       {
@@ -111,7 +112,7 @@
 
     * Create @ExceptionHandler method in your @ControllerAdvice class, that would convert your exception into 
     ErrorResponse and return ResponseEntity with HTTP 500 and ErrorResponse as a body.
-    * Next step is to expand your handling capabilities by using ResponseEntityExceptionHandler as a base for your
+    //* Next step is to expand your handling capabilities by using ResponseEntityExceptionHandler as a base for your
       @ConrtollerAdvice class. Remember, that ResponseEntityExceptionHandler already declares handlers, so instead
       of redeclaring them you override its base methods.
     * Create new ErrorCode in enum: "WRONG_HTTP_METHOD".

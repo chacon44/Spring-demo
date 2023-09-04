@@ -1,16 +1,20 @@
 package com.demo.service;
 
+import com.demo.exceptions.ErrorCode;
+import com.demo.exceptions.OutOfIdException;
 import com.demo.interfaces.IdManagement;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 @Service("IdManagement")
 public class IdManagementService implements IdManagement {
-    AtomicLong id = new AtomicLong(0);
+    private long currentId = 0;
+    private static final long MAX_ID = 2;
 
     @Override
     public long incrementId() {
-        return id.getAndIncrement();
+        if (currentId >= MAX_ID) {
+            throw new OutOfIdException("Maximum id value reached", ErrorCode.OUT_OF_IDS);
+        }
+        return ++currentId;
     }
 }
