@@ -30,6 +30,7 @@ public class RestController {
     private AnswerService answerService;
     private AnsweredQuestion answeredQuestion;
 
+    public String error;
     @Autowired
     @Qualifier("IdManagement")
     private IdManagement idManagement;
@@ -44,6 +45,7 @@ public class RestController {
         if (requestDTO.question() == null || requestDTO.question().isEmpty()) {
             ErrorDTO errorDTO = new ErrorDTO("Your question is missing or empty");
 
+            error = "405";
             return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
         }
 
