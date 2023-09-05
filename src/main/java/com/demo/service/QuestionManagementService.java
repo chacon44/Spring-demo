@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class QuestionManagementService {
@@ -31,27 +30,12 @@ public class QuestionManagementService {
         return Optional.ofNullable(questionsMap.remove(id));
     }
 
-    public boolean checkQuestion(String question) {
-
-        return questionsMap
-                .entrySet() //Set of all key-value pairs in map
-                .stream() // convert it to functional stream
-                .anyMatch(entry -> entry.getValue().question().equals(question));
-        //There "entry" is key-value pair. "entry.getValue()" is your value of type AnsweredQuestions. "entry.getValue().question()" is question, which we compare with the question from the method argument.
-        //.anyMatch(...) return true, if condition inside it is true for at least a single element in the stream (so since we create stream from map, it would be true, if map includes an element, for which condition is true).
-        //With this approach it would work even if later we would change answer type to be, say, also String.
-
-
-    }
-
     public Optional <ResponseDTO> returnMatchedQuestion(String question) {
-
-        AtomicReference<Optional<ResponseDTO>> matchedResponse = new AtomicReference<>(Optional.empty());
-
-        questionsMap.entrySet().stream().filter(entry -> entry.getValue().question().equals(question)) //search for question
+        return questionsMap.entrySet()
+                .stream()
+                .filter(
+                        entry -> entry.getValue().question().equals(question))
                 .findFirst()
-                .ifPresent( //if question is found
-                        entry -> matchedResponse.set(Optional.of(new ResponseDTO(entry.getKey(), question, entry.getValue().answer()))));
-        return matchedResponse.get();
+                .map(entry -> new ResponseDTO(entry.getKey(), entry.getValue().question(),entry.getValue().answer()));
     }
 }
