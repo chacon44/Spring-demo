@@ -1,10 +1,10 @@
 package com.demo.exceptions;
 
-public class OutOfIdException extends RuntimeException {
+public class CustomizedException extends RuntimeException {
     private final String description;
-    private final ErrorCodeEnums code;
+    private final ErrorCode code;
 
-    public OutOfIdException(String description, ErrorCodeEnums code) {
+    public CustomizedException(String description, ErrorCode code) {
         super(description);
         this.description = description;
         this.code = code;
@@ -14,7 +14,7 @@ public class OutOfIdException extends RuntimeException {
         return description;
     }
 
-    public ErrorCodeEnums getCode() {
+    public ErrorCode getCode() {
         return code;
     }
 }

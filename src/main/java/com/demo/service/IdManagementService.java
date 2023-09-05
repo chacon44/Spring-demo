@@ -1,7 +1,7 @@
 package com.demo.service;
 
-import com.demo.exceptions.ErrorCodeEnums;
-import com.demo.exceptions.OutOfIdException;
+import com.demo.exceptions.ErrorCode;
+import com.demo.exceptions.CustomizedException;
 import com.demo.interfaces.IdManagement;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class IdManagementService implements IdManagement {
     @Override
     public long incrementId() {
         if (currentId >= MAX_ID) {
-            throw new OutOfIdException("Maximum id value reached", ErrorCodeEnums.OUT_OF_IDS);
+            throw new CustomizedException("Maximum id value reached", ErrorCode.OUT_OF_IDS);
         }
         return ++currentId;
     }
