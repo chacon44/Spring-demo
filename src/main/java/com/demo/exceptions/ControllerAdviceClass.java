@@ -28,7 +28,7 @@ public class ControllerAdviceClass extends ResponseEntityExceptionHandler {
             headers.setAllow(supportedMethods);
         }
 
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO("WRONG_HTTP_METHOD", "Unable to process request");
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(ErrorCodeEnums.WRONG_HTTP_METHOD, "Unable to process request");
 
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.METHOD_NOT_ALLOWED);
     }
@@ -36,12 +36,7 @@ public class ControllerAdviceClass extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleMyException(OutOfIdException ex, WebRequest request) throws Exception {
         if (ex.getCode() == ErrorCodeEnums.OUT_OF_IDS) {
 
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO("OUT_OF_IDS", "Unable to generate new ID, maximum value: 10 was reached");
-
-            return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
-        } else if (ex.getCode() == ErrorCodeEnums.WRONG_HTTP_METHOD) {
-
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO("WRONG_HTTP_METHOD", "Unable to process request");
+            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(ErrorCodeEnums.OUT_OF_IDS, "Unable to generate new ID, maximum value: 10 was reached");
 
             return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
         } else return super.handleException(ex, request);

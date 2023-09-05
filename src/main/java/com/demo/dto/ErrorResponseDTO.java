@@ -1,4 +1,6 @@
 package com.demo.dto;
 
-public record ErrorResponseDTO (String code, String description) {
+import com.demo.exceptions.ErrorCodeEnums;
+
+public record ErrorResponseDTO (ErrorCodeEnums errorCodeEnums, String description) {
 }
