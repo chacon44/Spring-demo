@@ -1,0 +1,22 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+name: dev-YAML
+environment: testing
+enabled: true
+servers:
+  - www.abc.dev.com
+  - www.xyz.dev.com
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+name: prod-YAML
+environment: production
+enabled: true
+servers:
+  - www.abc.com
+  - www.xyz.com

@@ -121,7 +121,7 @@
 
     7. Add logging to your application:
 
-    * Go through: https://www.baeldung.com/slf4j-with-log4j2-logback and setup logging with SL4J and logback in your
+    * Go through: **https://www.baeldung.com/slf4j-with-log4j2-logback** and setup logging with SL4J and logback in your
       application
     * Test it with some logs to console.
     * You can look into Lombok and https://projectlombok.org/features/log to use @SL4J annotation to autogenerate
