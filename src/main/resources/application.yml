@@ -5,8 +5,6 @@ spring:
 name: dev-YAML
 environment: testing
 enabled: true
-servers:
-  - http://localhost:8080
 
 ---
 spring:
@@ -16,7 +14,4 @@ spring:
 name: prod-YAML
 environment: production
 enabled: true
-servers:
-  - http://localhost:8080
-
 

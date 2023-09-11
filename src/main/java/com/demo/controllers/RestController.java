@@ -50,9 +50,10 @@ public class RestController {
 
         Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
         if (matchedQuestion.isPresent()) {
+            logger.info("question found, send a new one");
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
-            //if question is new
+            logger.info("question not found. It is new so we can add it");
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
             questionManagementService.saveQuestion(responseDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
@@ -63,20 +64,33 @@ public class RestController {
     ResponseEntity<ResponseDTO> getAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
         //Did it because of IDEA suggestion
-        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return result.map(questions -> {
+            logger.info("Successful");
+            return ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()));
+        }).orElseGet(() -> {
+            logger.error("This id doesn't exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        });
+        //return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.deleteQuestion(id);
-        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        //logger.error("This id doesn't exist");
+        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer())))
+                .orElseGet(() -> {
+                    logger.error("This id doesn't exist");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                });
+        //return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
         if (questionManagementService.getQuestion(id).isEmpty()){
-            logger.error("Error log message");
+            logger.error("This id doesn't exist");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         else {
