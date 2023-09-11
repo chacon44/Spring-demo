@@ -45,15 +45,16 @@ public class RestController {
         if (requestDTO.question() == null || requestDTO.question().isEmpty()) {
             ErrorDTO errorDTO = new ErrorDTO("Your question is missing or empty");
 
+            logger.error("error because question is empty");
             return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
         }
 
         Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
         if (matchedQuestion.isPresent()) {
-            logger.info("question found");
+            logger.debug("question found");
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
-            logger.info("question not found");
+            logger.debug("question not found");
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
             questionManagementService.saveQuestion(responseDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
@@ -65,7 +66,7 @@ public class RestController {
         Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
         //Did it because of IDEA suggestion
         return result.map(questions -> {
-            logger.info("Successful");
+            logger.debug("Successful");
             return ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()));
         }).orElseGet(() -> {
             logger.error("This id doesn't exist");
@@ -77,13 +78,11 @@ public class RestController {
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.deleteQuestion(id);
-        //logger.error("This id doesn't exist");
         return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer())))
                 .orElseGet(() -> {
                     logger.error("This id doesn't exist");
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
                 });
-        //return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
@@ -96,6 +95,7 @@ public class RestController {
         else {
             ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
             questionManagementService.saveQuestion(responseDTO);
+            logger.debug("question put correctly");
             return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
         }
     }

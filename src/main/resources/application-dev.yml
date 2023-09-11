@@ -1,4 +1,4 @@
 logging:
   file.name: logs/application-debug.log
   level:
-    http://localhost:8080/demo: DEBUG
+    http://localhost:8080: DEBUG
