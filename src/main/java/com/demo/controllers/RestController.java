@@ -50,10 +50,10 @@ public class RestController {
 
         Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
         if (matchedQuestion.isPresent()) {
-            logger.info("question found, send a new one");
+            logger.info("question found");
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
-            logger.info("question not found. It is new so we can add it");
+            logger.info("question not found");
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
             questionManagementService.saveQuestion(responseDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
