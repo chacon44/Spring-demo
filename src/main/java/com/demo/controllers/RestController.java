@@ -1,5 +1,6 @@
 package com.demo.controllers;
 
+import com.demo.Application;
 import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
@@ -7,6 +8,7 @@ import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.IdManagementService;
 import com.demo.service.QuestionManagementService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -18,7 +20,7 @@ import java.util.Optional;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    //Services
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(Application.class);
     @Autowired
     private GreetingService greetingService;
     @Autowired
@@ -74,8 +76,10 @@ public class RestController {
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
-        if (questionManagementService.getQuestion(id).isEmpty())
+        if (questionManagementService.getQuestion(id).isEmpty()){
+            logger.error("Error log message");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
         else {
             ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
             questionManagementService.saveQuestion(responseDTO);

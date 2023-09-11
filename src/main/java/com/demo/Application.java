@@ -1,8 +1,8 @@
 package com.demo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class Application {
     private static Logger logger = LoggerFactory.getLogger(Application.class);
