@@ -2,10 +2,6 @@ spring:
   config:
     activate:
       on-profile: dev
-logging:
-  level:
-    root:
-      http://localhost:8080: INFO
 name: dev-YAML
 environment: testing
 enabled: true
@@ -17,10 +13,6 @@ spring:
   config:
     activate:
       on-profile: prod
-logging:
-  level:
-    root:
-      http://localhost:8080: DEBUG
 name: prod-YAML
 environment: production
 enabled: true

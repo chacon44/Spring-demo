@@ -1,6 +1,5 @@
 package com.demo.controllers;
 
-import com.demo.Application;
 import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
@@ -20,7 +19,7 @@ import java.util.Optional;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(Application.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
     @Autowired
     private GreetingService greetingService;
     @Autowired
