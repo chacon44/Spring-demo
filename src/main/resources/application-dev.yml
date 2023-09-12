@@ -1,4 +1,5 @@
+spring:
+  profiles: DEV
 logging:
-  file.name: logs/application-debug.log
   level:
     http://localhost:8080: DEBUG

@@ -1,4 +1,10 @@
 logging:
-  file.name: logs/application-debug.log
-  level:
-    http://localhost:8080/demo: ERROR
+  file: logs/production_profile_app.log
+
+pattern:
+  console: %d{HH:mm:ss.ssss} [%thread] %-5level %logger{36} - %msg%n
+
+level:
+  root: ERROR
+
+
