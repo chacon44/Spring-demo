@@ -66,7 +66,7 @@ public class RestController {
         Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
         //Did it because of IDEA suggestion
         return result.map(questions -> {
-            logger.debug("Successful");
+            logger.info("Successful");
             return ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()));
         }).orElseGet(() -> {
             logger.error("This id doesn't exist");

@@ -1,5 +1,0 @@
-spring:
-  profiles: DEV
-logging:
-  level:
-    http://localhost:8080: DEBUG
