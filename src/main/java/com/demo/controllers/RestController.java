@@ -7,6 +7,7 @@ import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.IdManagementService;
 import com.demo.service.QuestionManagementService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    //Services
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
     @Autowired
     private GreetingService greetingService;
     @Autowired
@@ -44,14 +45,16 @@ public class RestController {
         if (requestDTO.question() == null || requestDTO.question().isEmpty()) {
             ErrorDTO errorDTO = new ErrorDTO("Your question is missing or empty");
 
+            logger.error("error because question is empty");
             return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
         }
 
         Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
         if (matchedQuestion.isPresent()) {
+            logger.debug("question found");
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
-            //if question is new
+            logger.debug("question not found");
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
             questionManagementService.saveQuestion(responseDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
@@ -62,23 +65,37 @@ public class RestController {
     ResponseEntity<ResponseDTO> getAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
         //Did it because of IDEA suggestion
-        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return result.map(questions -> {
+            logger.info("Successful");
+            return ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()));
+        }).orElseGet(() -> {
+            logger.error("This id doesn't exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        });
+        //return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> deleteAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.deleteQuestion(id);
-        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+        return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer())))
+                .orElseGet(() -> {
+                    logger.error("This id doesn't exist");
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+                });
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
-        if (questionManagementService.getQuestion(id).isEmpty())
+        if (questionManagementService.getQuestion(id).isEmpty()){
+            logger.error("This id doesn't exist");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
         else {
             ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
             questionManagementService.saveQuestion(responseDTO);
+            logger.debug("question put correctly");
             return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
         }
     }

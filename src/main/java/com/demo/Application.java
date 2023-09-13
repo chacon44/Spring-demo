@@ -1,15 +1,18 @@
 package com.demo;
 
-import com.demo.dto.GreetingResponse;
-import com.demo.model.AnsweredQuestion;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Application {
-    private AnsweredQuestion answeredQuestion;
+    private static Logger logger = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) throws JsonProcessingException {
-        GreetingResponse bean = new GreetingResponse("Hello, world");
-        System.out.println(new ObjectMapper().writeValueAsString(bean));
+        logger.debug("Debug log message");
+        logger.info("Info log message");
+        logger.error("Error log message");
+
+        String variable = "Hello John";
+        logger.debug("Printing variable value {} ", variable);
     }
 }
