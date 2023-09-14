@@ -53,24 +53,40 @@ Theory questions
           separate ErrorResponseDTO, like this: json { "errorDescription": "Your question is missing or empty" } Java would
           show an error, if you would try to put an ErrorResponseDTO into ResponseEntity<ResponseDTO>. How can this be resolved?
 
-For subtask 5:
-          What is CRUD? What HTTP methods correspond to CRUD most often?
-          What is idempotence? Why is it important? What problem would arise, when your supposedly idempotent methods don't have idempotence? (Hint: look into web caching)
-          What is REST? How CRUD fits into REST?
-          What is model classes? How are they different from DTOs?
-          Bonus HARD question: Why REST? Most of the modern API are REST APIs (even Spring have separate @RestController and not for example @SoapController). Why is it so popular and usefull? 
-For subtask 6:
-          What are differences between checked and unchecked exceptions?
-          Why override default Spring exception handling? What is the benefit to us?
-          Why not only @ExceptionHandler in controller class? Why would you need @ControllerAdvice?
-          What kind of exceptions are unable to be handled by @ExceptionHandler in controller class or @ControllerAdvice attached to a specific controller, but are still handled by Spring MVC?
-          What are benefits of ResponseEntityExceptionHandler?
-          Bonus HARD question: what happens if you have multiple @ControllerAdvice? Which one would be used? What if one of them extends ResponseEntityExceptionHandler? (Hint: you can do experiments with this in your project)
-For subtask 7:
-          What are benefits of logging?
-          Why have multiple log levels (INFO, WARN, ERROR, DEBUG, etc)?
-          What are differences between logging in development for devs and in production? Who are intended consumer of logs in production?
-          What is the purpose of Spring profiles?
-          How many Spring profiles can be active at once? What happens with properties, that are defined in multiple active profiles?
-          What is purpose of SL4J and logback specifically in our setup? Can they be used independently?
-          Bonus HARD question: can the logging be done not only in console, but in files as well? Could different log levels or log formats be configured for console and files? Could different logs be written into multiple log files?
+* For subtask 5:
+  * What is CRUD? What HTTP methods correspond to CRUD most often?
+  * What is idempotence? Why is it important? What problem would arise, when your supposedly idempotent methods don't have idempotence? (Hint: look into web caching)
+  * What is REST? How CRUD fits into REST?
+  * What is model classes? How are they different from DTOs?
+  * Bonus HARD question: Why REST? Most of the modern API are REST APIs (even Spring have separate @RestController and not for example @SoapController). Why is it so popular and usefull? 
+
+* For subtask 6:
+  * What are differences between checked and unchecked exceptions?
+  * Why override default Spring exception handling? What is the benefit to us?
+  * Why not only @ExceptionHandler in controller class? Why would you need @ControllerAdvice?
+  * What kind of exceptions are unable to be handled by @ExceptionHandler in controller class or @ControllerAdvice attached to a specific controller, but are still handled by Spring MVC?
+  * What are benefits of ResponseEntityExceptionHandler?
+  * Bonus HARD question: what happens if you have multiple @ControllerAdvice? Which one would be used? What if one of them extends ResponseEntityExceptionHandler? (Hint: you can do experiments with this in your project)
+
+
+* For subtask 7:
+  * What are benefits of logging?
+  * Why have multiple log levels (INFO, WARN, ERROR, DEBUG, etc)?
+  * What are differences between logging in development for devs and in production? Who are intended consumer of logs in production?
+  * What is the purpose of Spring profiles?
+  * How many Spring profiles can be active at once? What happens with properties, that are defined in multiple active profiles?
+  * What is purpose of SL4J and logback specifically in our setup? Can they be used independently?
+  * Bonus HARD question: can the logging be done not only in console, but in files as well? Could different log levels or log formats be configured for console and files? Could different logs be written into multiple log files?
+
+* For subtask 8:
+  * What are unit tests? Why use them?
+  * When should you run unit tests? Should you run all of them every time? How long should unit tests take on average?
+  * What are mocks? Why use them?
+  * What among method arguments, constructor dependencies and object being tested are we allowed to mock during tests? I. e. in following code, what make sense to mock among dependency, object, argument1 and argument2? Java MyClass object = new MyClass(dependency); object.doStuff(argument1, argument2);
+  * Bonus HARD question: should we adapt our classes (like was suggested for RandomAnswerService) to be able to use mocks easier? Does it improved or degrade overall architecture?
+
+* For subtask 9:
+  * What is the difference between integration tests and unit tests?
+  * Why use Spring test, what can it provide for us?
+  * Why mock service? What kind of test it would be, if we used actual services (and even DB later) instead of mocks?
+  * Bonus HARD question: could we test case of multiple concurrent (parallel) requests to the same endpoint? For example to check, if app would properly generate unique IDs, when hundred of requests come in the same moment?
