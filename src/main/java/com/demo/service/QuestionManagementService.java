@@ -16,7 +16,6 @@ public class QuestionManagementService {
     AnsweredQuestion answeredQuestion;
     @Autowired
     ResponseDTO responseDTO;
-    @Autowired
     Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
     public void saveQuestion(ResponseDTO responseDTO) {

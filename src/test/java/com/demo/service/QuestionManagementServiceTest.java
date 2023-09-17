@@ -8,7 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 public class QuestionManagementServiceTest {
 
-    @Mock
+    
     Map<Long, AnsweredQuestion> questionsMap;
     @Mock
     AnsweredQuestion answeredQuestion;
@@ -38,24 +40,26 @@ public class QuestionManagementServiceTest {
         String question = "Test question";
         boolean answer = true;
         responseDTO = new ResponseDTO(id, question, answer);
+        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
+
 
         //ACT
         answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
         questionManagementService.saveQuestion(responseDTO);
-        questionsMap.put(2L, answeredQuestion);
-
-        String question1 = questionsMap.get(2L).question();
+        questionsMap.put(1L, answeredQuestion);
+        String question1 = questionsMap.get(1L).question();
 
         //save again
-        questionsMap.put(2L, answeredQuestion);
+        questionsMap.put(1L, answeredQuestion);
+        String question2 = questionsMap.get(1L).question();
 
         String savedQuestion = questionManagementService.getQuestion(responseDTO.id()).toString();
         System.out.println(savedQuestion);
         System.out.println(question1);
 
         //ASSERT
-        //Get saved first time
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).toString(), question);
+        //Saved twice
+        assertEquals(question1, question2);
 
     }
     @Test
@@ -65,21 +69,28 @@ public class QuestionManagementServiceTest {
         String question = "Test question";
         boolean answer = true;
         responseDTO = new ResponseDTO(id, question, answer);
-
+        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
         //ACT
         questionManagementService.saveQuestion(responseDTO);
         answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
         questionsMap.put(responseDTO.id(), answeredQuestion);
 
+        System.out.println(questionManagementService.getQuestion(responseDTO.id()).get().question());
         //ASSERT
         //Get saved
-        assertNotNull(questionManagementService.getQuestion(responseDTO.id()));
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question);
 
         //Search for question
-        assertNotNull(questionManagementService.returnMatchedQuestion(responseDTO.question()));
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question, questionManagementService.returnMatchedQuestion(responseDTO.question()).get().question());
+
 
         //Search for non saved question
-        assertEquals(Optional.empty(),questionManagementService.returnMatchedQuestion("not existing question"));
+
+        assertThrows(NoSuchElementException.class,
+                ()->{
+                    questionManagementService.returnMatchedQuestion("not existing question").get().question();
+                });
+        //assertEquals(Optional.empty(),questionManagementService.returnMatchedQuestion("not existing question"));
 
 
     }
@@ -91,7 +102,7 @@ public class QuestionManagementServiceTest {
         String question = "Test question";
         boolean answer = true;
         responseDTO = new ResponseDTO(id, question, answer);
-
+        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
         //ACT
         questionManagementService.saveQuestion(responseDTO);
         answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
@@ -99,10 +110,9 @@ public class QuestionManagementServiceTest {
 
         //ASSERT
         //Get saved
-        assertNotNull(questionManagementService.getQuestion(responseDTO.id()));
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question);
 
-        //Get non saved
-        //assertNull(questionManagementService.getQuestion(10L));
+
     }
 
     @Test
@@ -112,6 +122,8 @@ public class QuestionManagementServiceTest {
         String question = "Test question";
         boolean answer = true;
         responseDTO = new ResponseDTO(id, question, answer);
+        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
+
 
         //ACT
         questionManagementService.saveQuestion(responseDTO);
@@ -119,11 +131,11 @@ public class QuestionManagementServiceTest {
         questionsMap.put(responseDTO.id(), answeredQuestion);
 
         //ASSERT
-        //Get saved
-        assertNotNull(questionManagementService.getQuestion(responseDTO.id()));
-        //Remove
-        assertEquals(Optional.empty(),questionManagementService.deleteQuestion(10L));
-    }
+        //Remove non saved
+        assertThrows(NoSuchElementException.class,
+                ()->{
+                    questionManagementService.deleteQuestion(2L).get().question();
+                });    }
     @Test
     public void save_Get_Remove_and_Get_Again(){
         //ARRANGE
@@ -131,6 +143,7 @@ public class QuestionManagementServiceTest {
         String question = "Test question";
         boolean answer = true;
         responseDTO = new ResponseDTO(id, question, answer);
+        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
         //ACT
         questionManagementService.saveQuestion(responseDTO);
@@ -139,11 +152,21 @@ public class QuestionManagementServiceTest {
 
         //ASSERT
         //Get saved
-        assertNotNull(questionManagementService.getQuestion(responseDTO.id()));
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question);
+
+        questionManagementService.deleteQuestion(responseDTO.id());
         //Remove
-        assertNotNull(questionManagementService.deleteQuestion(responseDTO.id()));
+
+        assertThrows(NoSuchElementException.class,
+                ()->{
+            questionManagementService.deleteQuestion(responseDTO.id()).get().question();
+                });
         //Get Again
-        assertEquals(Optional.empty(),questionManagementService.getQuestion(10L));
+
+        assertThrows(NoSuchElementException.class,
+                ()->{
+                    questionManagementService.getQuestion(responseDTO.id()).get().question();
+                });
 
     }
 }
