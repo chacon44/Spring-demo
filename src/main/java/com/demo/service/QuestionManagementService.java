@@ -2,6 +2,7 @@ package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,10 +12,15 @@ import java.util.Optional;
 @Service
 public class QuestionManagementService {
 
+    @Autowired
+    AnsweredQuestion answeredQuestion;
+    @Autowired
+    ResponseDTO responseDTO;
+    @Autowired
     Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
     public void saveQuestion(ResponseDTO responseDTO) {
-        AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
+        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
         questionsMap.put(responseDTO.id(), answeredQuestion);
     }
 

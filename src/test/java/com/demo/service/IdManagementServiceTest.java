@@ -21,18 +21,17 @@ public class IdManagementServiceTest {
 
         //make some increments to check if it works, 5 at maximum
         long testValue = Math.min(IdManagementService.getMaxId(), 5);
-        for (int i = 1; i< testValue; i++) {
+        for (int i = 1; i < testValue; i++)
             assertEquals(i, idManagementService.incrementId());
-        }
     }
 
     @Test
     public void testIncrementIdThrowsException() {
-    for (int i = 0; i< IdManagementService.getMaxId(); i++)
-        idManagementService.incrementId();
+        for (int i = 0; i < IdManagementService.getMaxId(); i++)
+            idManagementService.incrementId();
 
 
-    CustomizedException exception = assertThrows(CustomizedException.class, () -> idManagementService.incrementId());
+        CustomizedException exception = assertThrows(CustomizedException.class, () -> idManagementService.incrementId());
 
         assertEquals("Maximum id value reached", exception.getMessage());
         assertEquals(ErrorCode.OUT_OF_IDS, exception.getCode());

@@ -8,6 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.util.Random;
+
 @ComponentScan(basePackages = "com.demo")
 @Configuration
 @EnableWebMvc
@@ -17,8 +19,14 @@ public class ApplicationConfig {
 
     @Autowired
     private GreetingService greetingService;
+
+    @Bean
+    public Random returnRandom(){
+        return new Random();
+    }
     @Bean
     public GreetingService greetingService(){
         return new GreetingService(greeting);
     }
+
 }
