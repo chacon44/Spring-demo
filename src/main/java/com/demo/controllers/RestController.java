@@ -64,7 +64,6 @@ public class RestController {
     @GetMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> getAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
-        //Did it because of IDEA suggestion
 
         return result.map(questions -> {
             logger.info("Successful");

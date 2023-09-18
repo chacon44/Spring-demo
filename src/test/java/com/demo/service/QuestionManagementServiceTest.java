@@ -1,172 +1,137 @@
 package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
-import com.demo.model.AnsweredQuestion;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 public class QuestionManagementServiceTest {
 
-    
-    Map<Long, AnsweredQuestion> questionsMap;
-    @Mock
-    AnsweredQuestion answeredQuestion;
+    ResponseDTO responseDTO = new ResponseDTO(1L, "Test question", true);
 
-    @Mock
-    ResponseDTO responseDTO;
-    @InjectMocks
     private QuestionManagementService questionManagementService;
+    @BeforeEach
+    public void setUp() {
+        questionManagementService = new QuestionManagementService();
+    }
 
-
-    // cover various scenarios of use:
-    //TODO
+    // TODO
 
 
     @Test
-    public void save_question_multiple_times(){
-        //ARRANGE
-        long id = 1L;
-        String question = "Test question";
-        boolean answer = true;
-        responseDTO = new ResponseDTO(id, question, answer);
-        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
-
-
+    public void save_And_Get_Saved(){
         //ACT
-        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
         questionManagementService.saveQuestion(responseDTO);
-        questionsMap.put(1L, answeredQuestion);
-        String question1 = questionsMap.get(1L).question();
-
-        //save again
-        questionsMap.put(1L, answeredQuestion);
-        String question2 = questionsMap.get(1L).question();
-
-        String savedQuestion = questionManagementService.getQuestion(responseDTO.id()).toString();
-        System.out.println(savedQuestion);
-        System.out.println(question1);
 
         //ASSERT
-        //Saved twice
-        assertEquals(question1, question2);
+
+        //Check if id is stored in question map
+        assertTrue(questionManagementService.questionsMap.containsKey(responseDTO.id()));
+
+        //Check if question is stored in associated id
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+
+        //Check if answer is stored in associated id
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
 
     }
     @Test
-    public void save_And_Search_For_Questions_and_Non_Saved_Questions(){
-        //ARRANGE
-        long id = 1L;
-        String question = "Test question";
-        boolean answer = true;
-        responseDTO = new ResponseDTO(id, question, answer);
-        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
+    public void search_For_Non_Saved_Question(){
+        //I send a question and search if it exists and its saved in any id, if not it will return Optional.empty
+        //So i can assert if it is empty
+
+        assertTrue(questionManagementService.returnMatchedQuestion(responseDTO.question()).isEmpty());
+    }
+    @Test
+    public void get_Non_Saved(){
+        //when I get a non saved question
+        //since getQuestion return Optional.ofNullable(questionsMap.get(id))
+        //In case there is no question in that id, it will be Optional.empty
+        //So I check assert if this is Optional.empty
+
+        assertTrue(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
+    }
+    @Test
+    public void save_Question_Multiple_Times(){
+
         //ACT
         questionManagementService.saveQuestion(responseDTO);
-        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.put(responseDTO.id(), answeredQuestion);
 
-        System.out.println(questionManagementService.getQuestion(responseDTO.id()).get().question());
+        //Check if id is stored in question map
+        assertTrue(questionManagementService.questionsMap.containsKey(responseDTO.id()));
+
+        //Check if question is stored in associated id
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+
+        //Check if answer is stored in associated id
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
+
+        //save again with different id but same question
+        responseDTO = new ResponseDTO(2L, "Test question", true);
+        questionManagementService.saveQuestion(responseDTO);
+
         //ASSERT
-        //Get saved
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question);
-
-        //Search for question
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question, questionManagementService.returnMatchedQuestion(responseDTO.question()).get().question());
-
-
-        //Search for non saved question
-
-        assertThrows(NoSuchElementException.class,
-                ()->{
-                    questionManagementService.returnMatchedQuestion("not existing question").get().question();
-                });
-        //assertEquals(Optional.empty(),questionManagementService.returnMatchedQuestion("not existing question"));
-
+        //the first id '1' must be stored but not the second one, '2'. Both are saved, I would need to add
+        // a checking before adding new questions. For example, calling returnMatchedQuestion
+        assertTrue(questionManagementService.questionsMap.containsKey(1L));
+        assertFalse(questionManagementService.questionsMap.containsKey(2L));
 
     }
     @Test
-    public void testSaveQuestion() {
+    public void save_And_Search_For_Question(){
 
-        //ARRANGE
-        long id = 1L;
-        String question = "Test question";
-        boolean answer = true;
-        responseDTO = new ResponseDTO(id, question, answer);
-        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
         //ACT
+
+        //I firstly save the question and answer
         questionManagementService.saveQuestion(responseDTO);
-        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.put(responseDTO.id(), answeredQuestion);
+
+        //save it in the questions map with its respective id
+        //questionsMap.put(responseDTO.id(), answeredQuestion);
 
         //ASSERT
-        //Get saved
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question);
+        //Get saved question in a specific id and check if it matches the question saved in the responseDTO
+        // that we provided before
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
 
-
+        //Search for question, it shouldn't return Optional.empty
+        assertFalse(questionManagementService.returnMatchedQuestion(responseDTO.question()).isEmpty());
     }
 
     @Test
     public void remove_Non_Saved(){
-        //ARRANGE
-        long id = 1L;
-        String question = "Test question";
-        boolean answer = true;
-        responseDTO = new ResponseDTO(id, question, answer);
-        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
+        //when I delete a non saved question
+        //since deleteQuestion return Optional.ofNullable(questionsMap.remove(id))
+        //In case there is no question in that id, it will be Optional.empty
+        //So I check assert if this is Optional.empty
 
 
-        //ACT
-        questionManagementService.saveQuestion(responseDTO);
-        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.put(responseDTO.id(), answeredQuestion);
+        assertTrue(questionManagementService.deleteQuestion(responseDTO.id()).isEmpty());
+        }
 
-        //ASSERT
-        //Remove non saved
-        assertThrows(NoSuchElementException.class,
-                ()->{
-                    questionManagementService.deleteQuestion(2L).get().question();
-                });    }
     @Test
     public void save_Get_Remove_and_Get_Again(){
-        //ARRANGE
-        long id = 1L;
-        String question = "Test question";
-        boolean answer = true;
-        responseDTO = new ResponseDTO(id, question, answer);
-        Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
         //ACT
         questionManagementService.saveQuestion(responseDTO);
-        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.put(responseDTO.id(), answeredQuestion);
+        //questionsMap.put(responseDTO.id(), answeredQuestion);
 
-        //ASSERT
-        //Get saved
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),question);
+        //Check if id is stored in question map
+        assertTrue(questionManagementService.questionsMap.containsKey(responseDTO.id()));
 
+        //Check if question is stored in associated id and matches the sent question
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+
+        //Check if answer is stored in associated id and matches the sent answer
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
+
+
+        //Now remove
         questionManagementService.deleteQuestion(responseDTO.id());
-        //Remove
 
-        assertThrows(NoSuchElementException.class,
-                ()->{
-            questionManagementService.deleteQuestion(responseDTO.id()).get().question();
-                });
-        //Get Again
+        assertFalse(questionManagementService.questionsMap.containsKey(responseDTO.id()));
 
-        assertThrows(NoSuchElementException.class,
-                ()->{
-                    questionManagementService.getQuestion(responseDTO.id()).get().question();
-                });
-
+        //Check if question is not stored in associated id
+        assertTrue(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
     }
 }

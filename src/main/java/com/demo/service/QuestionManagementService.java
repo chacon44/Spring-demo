@@ -2,9 +2,7 @@ package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -12,22 +10,22 @@ import java.util.Optional;
 @Service
 public class QuestionManagementService {
 
-    @Autowired
-    AnsweredQuestion answeredQuestion;
-    @Autowired
-    ResponseDTO responseDTO;
     Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
     public void saveQuestion(ResponseDTO responseDTO) {
-        answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.put(responseDTO.id(), answeredQuestion);
+        AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
+        questionsMap.putIfAbsent(responseDTO.id(), answeredQuestion);
     }
 
     public ResponseDTO returnQuestion(long id) {
+        //this method return responseDTO in order to get its individual fields and save them in a new dto
+        //will be used in PUT request
+
         return new ResponseDTO(id, questionsMap.get(id).question(), questionsMap.get(id).answer());
     }
 
     public Optional<AnsweredQuestion> getQuestion(long id) {
+
         return Optional.ofNullable(questionsMap.get(id));
     }
 
