@@ -3,6 +3,7 @@ package com.demo.service;
 import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
 import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -14,7 +15,9 @@ public class QuestionManagementService {
 
     public void saveQuestion(ResponseDTO responseDTO) {
         AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.putIfAbsent(responseDTO.id(), answeredQuestion);
+
+        //if (!questionsMap.entrySet().contains(answeredQuestion.question()))
+            questionsMap.putIfAbsent(responseDTO.id(), answeredQuestion);
     }
 
     public ResponseDTO returnQuestion(long id) {
@@ -33,12 +36,12 @@ public class QuestionManagementService {
         return Optional.ofNullable(questionsMap.remove(id));
     }
 
-    public Optional <ResponseDTO> returnMatchedQuestion(String question) {
+    public Optional<ResponseDTO> returnMatchedQuestion(String question) {
         return questionsMap.entrySet()
                 .stream()
                 .filter(
                         entry -> entry.getValue().question().equals(question))
                 .findFirst()
-                .map(entry -> new ResponseDTO(entry.getKey(), entry.getValue().question(),entry.getValue().answer()));
+                .map(entry -> new ResponseDTO(entry.getKey(), entry.getValue().question(), entry.getValue().answer()));
     }
 }
