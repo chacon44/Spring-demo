@@ -16,8 +16,11 @@ public class QuestionManagementService {
     public void saveQuestion(ResponseDTO responseDTO) {
         AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
 
+        //this shoul
         //if (!questionsMap.entrySet().contains(answeredQuestion.question()))
-            questionsMap.putIfAbsent(responseDTO.id(), answeredQuestion);
+        questionsMap.put(responseDTO.id(), answeredQuestion);
+
+        //questionsMap.putIfAbsent(responseDTO.id(), answeredQuestion);
     }
 
     public ResponseDTO returnQuestion(long id) {

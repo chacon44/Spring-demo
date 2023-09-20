@@ -68,21 +68,16 @@ public class QuestionManagementServiceTest {
         assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
 
         //save again with different id but same question
-        responseDTO = new ResponseDTO(2L, "Test question", true);
-        questionManagementService.saveQuestion(responseDTO);
+        ResponseDTO responseDTO_2 = new ResponseDTO(responseDTO.id() +1, responseDTO.question(), responseDTO.answer());
+        questionManagementService.saveQuestion(responseDTO_2);
 
         //ASSERT
-        //the first id '1' must be stored but not the second one, '2'. Both are saved, I would need to add
-        // a checking before adding new questions. For example, calling returnMatchedQuestion
-        assertTrue(questionManagementService.questionsMap.containsKey(1L));
-        //assertFalse(questionManagementService.questionsMap.containsKey(2L));
 
-        //check if I can save two questions in the same id. It should only save the first id
-        responseDTO = new ResponseDTO(2L, "Second Test question", true);
         questionManagementService.saveQuestion(responseDTO);
+        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
 
-        //It should return the first question saved in id '2L', which is "test question"
-        assertEquals(questionManagementService.getQuestion(2L).get().question(),"Test question");
+        //It should return the same question in other id
+        assertEquals(questionManagementService.getQuestion(responseDTO_2.id()).get().question(),responseDTO_2.question());
 
     }
     @Test
