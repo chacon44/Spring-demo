@@ -17,11 +17,11 @@ import static org.mockito.Mockito.verify;
 class RandomAnswerServiceTest {
 
     @Mock
-    Random randomMock;
+    private Random randomMock;
 
     @Spy
     @InjectMocks
-    RandomAnswerService randomAnswerService;
+    private RandomAnswerService randomAnswerService;
 
 
     //I have to check the random generation of answers, not only variable type

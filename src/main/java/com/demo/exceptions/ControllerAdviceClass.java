@@ -1,7 +1,6 @@
 package com.demo.exceptions;
 
 import com.demo.dto.ErrorResponseDTO;
-import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

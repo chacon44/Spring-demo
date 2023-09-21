@@ -70,7 +70,6 @@ public class RestController {
             return ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()));
         }).orElseGet(() -> {
             logger.error("This id doesn't exist");
-            if (id > 4) throw new RuntimeException("exception ");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         });
     }

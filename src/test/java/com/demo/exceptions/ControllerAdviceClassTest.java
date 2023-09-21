@@ -20,16 +20,16 @@ import static org.mockito.Mockito.when;
 class ControllerAdviceClassTest {
 
     @Mock
-    WebRequest webRequestMock;
+    private WebRequest webRequestMock;
 
     @Mock
-    CustomizedException customizedExceptionMock;
+    private CustomizedException customizedExceptionMock;
     @Mock
-    HttpRequestMethodNotSupportedException exMock;
+    private HttpRequestMethodNotSupportedException exMock;
     @Mock
-    HttpHeaders headersMock;
+    private HttpHeaders headersMock;
     @Mock
-    HttpStatus statusMock;
+    private HttpStatus statusMock;
 
     private final
     ControllerAdviceClass controllerAdviceClass = new ControllerAdviceClass();
@@ -55,6 +55,8 @@ class ControllerAdviceClassTest {
         //check if not null
         assertNotNull(errorResponseDTO);
         assertEquals(ErrorCode.OUT_OF_IDS, errorResponseDTO.error());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
         assertEquals("Unable to generate new ID, maximum value was reached", errorResponseDTO.description());
     }
 }

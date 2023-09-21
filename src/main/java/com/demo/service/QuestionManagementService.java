@@ -11,16 +11,11 @@ import java.util.Optional;
 @Service
 public class QuestionManagementService {
 
-    Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
+    private final Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
     public void saveQuestion(ResponseDTO responseDTO) {
         AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-
-        //this shoul
-        //if (!questionsMap.entrySet().contains(answeredQuestion.question()))
         questionsMap.put(responseDTO.id(), answeredQuestion);
-
-        //questionsMap.putIfAbsent(responseDTO.id(), answeredQuestion);
     }
 
     public ResponseDTO returnQuestion(long id) {

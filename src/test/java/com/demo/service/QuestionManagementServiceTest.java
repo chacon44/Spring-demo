@@ -27,13 +27,13 @@ public class QuestionManagementServiceTest {
         //ASSERT
 
         //Check if id is stored in question map
-        assertTrue(questionManagementService.questionsMap.containsKey(responseDTO.id()));
+        assertFalse(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
 
         //Check if question is stored in associated id
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+        assertEquals(responseDTO.question(), questionManagementService.getQuestion(responseDTO.id()).get().question());
 
         //Check if answer is stored in associated id
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
+        assertEquals(responseDTO.answer(), questionManagementService.getQuestion(responseDTO.id()).get().answer());
 
     }
     @Test
@@ -59,13 +59,12 @@ public class QuestionManagementServiceTest {
         questionManagementService.saveQuestion(responseDTO);
 
         //Check if id is stored in question map
-        assertTrue(questionManagementService.questionsMap.containsKey(responseDTO.id()));
-
+        assertFalse(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
         //Check if question is stored in associated id
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+        assertEquals(responseDTO.question(), questionManagementService.getQuestion(responseDTO.id()).get().question());
 
         //Check if answer is stored in associated id
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
+        assertEquals(responseDTO.answer(), questionManagementService.getQuestion(responseDTO.id()).get().answer());
 
         //save again with different id but same question
         ResponseDTO responseDTO_2 = new ResponseDTO(responseDTO.id() +1, responseDTO.question(), responseDTO.answer());
@@ -74,10 +73,10 @@ public class QuestionManagementServiceTest {
         //ASSERT
 
         questionManagementService.saveQuestion(responseDTO);
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+        assertEquals(responseDTO.question(),questionManagementService.getQuestion(responseDTO.id()).get().question());
 
         //It should return the same question in other id
-        assertEquals(questionManagementService.getQuestion(responseDTO_2.id()).get().question(),responseDTO_2.question());
+        assertEquals(responseDTO_2.question(),questionManagementService.getQuestion(responseDTO_2.id()).get().question());
 
     }
     @Test
@@ -94,7 +93,7 @@ public class QuestionManagementServiceTest {
         //ASSERT
         //Get saved question in a specific id and check if it matches the question saved in the responseDTO
         // that we provided before
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+        assertEquals(responseDTO.question(), questionManagementService.getQuestion(responseDTO.id()).get().question());
 
         //Search for question, it shouldn't return Optional.empty
         assertFalse(questionManagementService.returnMatchedQuestion(responseDTO.question()).isEmpty());
@@ -119,19 +118,15 @@ public class QuestionManagementServiceTest {
         //questionsMap.put(responseDTO.id(), answeredQuestion);
 
         //Check if id is stored in question map
-        assertTrue(questionManagementService.questionsMap.containsKey(responseDTO.id()));
-
+        assertFalse(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
         //Check if question is stored in associated id and matches the sent question
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().question(),responseDTO.question());
+        assertEquals(responseDTO.question(), questionManagementService.getQuestion(responseDTO.id()).get().question());
 
         //Check if answer is stored in associated id and matches the sent answer
-        assertEquals(questionManagementService.getQuestion(responseDTO.id()).get().answer(),responseDTO.answer());
-
+        assertEquals(responseDTO.answer(), questionManagementService.getQuestion(responseDTO.id()).get().answer());
 
         //Now remove
         questionManagementService.deleteQuestion(responseDTO.id());
-
-        assertFalse(questionManagementService.questionsMap.containsKey(responseDTO.id()));
 
         //Check if question is not stored in associated id
         assertTrue(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
