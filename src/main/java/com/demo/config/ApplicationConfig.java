@@ -17,8 +17,6 @@ public class ApplicationConfig {
     @Value("Hello, world!")
     private String greeting;
 
-    @Value("${maxId:1L}")
-    private long maxId;
     @Autowired
     private GreetingService greetingService;
 
