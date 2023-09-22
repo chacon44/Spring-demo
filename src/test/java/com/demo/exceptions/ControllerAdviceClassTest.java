@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-
 class ControllerAdviceClassTest {
 
     @Mock
@@ -31,14 +30,16 @@ class ControllerAdviceClassTest {
     @Mock
     private HttpStatus statusMock;
 
-    private final
-    ControllerAdviceClass controllerAdviceClass = new ControllerAdviceClass();
+    private final ControllerAdviceClass controllerAdviceClass = new ControllerAdviceClass();
+
     @Test
     void handleHttpRequestMethodNotSupported() {
 
-        ResponseEntity<Object> responseEntity = controllerAdviceClass.handleHttpRequestMethodNotSupported(exMock,headersMock,statusMock,webRequestMock);
+        ResponseEntity<Object> responseEntity = controllerAdviceClass.handleHttpRequestMethodNotSupported(exMock, headersMock, statusMock, webRequestMock);
         assertNotNull(responseEntity.getBody());
         assertEquals(ErrorCode.WRONG_HTTP_METHOD, ((ErrorResponseDTO) responseEntity.getBody()).error());
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, responseEntity.getStatusCode());
+
     }
 
     @Test
