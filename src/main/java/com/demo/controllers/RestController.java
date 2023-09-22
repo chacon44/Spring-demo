@@ -64,7 +64,7 @@ public class RestController {
     @GetMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<ResponseDTO> getAnswer(@PathVariable long id) {
         Optional<AnsweredQuestion> result = questionManagementService.getQuestion(id);
-        //Did it because of IDEA suggestion
+
         return result.map(questions -> {
             logger.info("Successful");
             return ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()));
@@ -72,7 +72,6 @@ public class RestController {
             logger.error("This id doesn't exist");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         });
-        //return result.map(questions -> ResponseEntity.ok(new ResponseDTO(id, questions.question(), questions.answer()))).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @DeleteMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})

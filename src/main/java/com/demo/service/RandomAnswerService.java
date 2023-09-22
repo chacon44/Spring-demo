@@ -2,6 +2,7 @@ package com.demo.service;
 
 import com.demo.dto.RequestDTO;
 import com.demo.interfaces.AnswerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -9,11 +10,13 @@ import java.util.Random;
 //Write ("test") in order to identify this service in controllers using qualifiers and referring to "test"
 @Service("test")
 public class RandomAnswerService implements AnswerService {
-    Random random = new Random();
+
+    @Autowired
+    private Random returnRandom;
 
     @Override
     public boolean getAnswer() {
-        return random.nextBoolean();
+        return returnRandom.nextBoolean();
     }
 
     @Override
