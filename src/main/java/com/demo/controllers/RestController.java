@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
     @Autowired
     private GreetingService greetingService;
     @Autowired
@@ -30,7 +31,13 @@ public class RestController {
     @Qualifier("answerQuestions")
     private AnswerService answerService;
     private AnsweredQuestion answeredQuestion;
+    public void setQuestionManagementService(QuestionManagementService questionManagementService) {
+        this.questionManagementService = questionManagementService;
+    }
 
+    public void setIdManagementService(IdManagementService idManagementService) {
+        this.idManagementService = idManagementService;
+    }
     @Autowired
     @Qualifier("IdManagement")
     private IdManagement idManagement;
