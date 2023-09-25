@@ -1,6 +1,5 @@
 package com.demo.controllers;
 
-import com.demo.config.ApplicationConfig;
 import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
@@ -8,15 +7,11 @@ import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.IdManagementService;
 import com.demo.service.QuestionManagementService;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -36,7 +31,13 @@ public class RestController {
     @Qualifier("answerQuestions")
     private AnswerService answerService;
     private AnsweredQuestion answeredQuestion;
+    public void setQuestionManagementService(QuestionManagementService questionManagementService) {
+        this.questionManagementService = questionManagementService;
+    }
 
+    public void setIdManagementService(IdManagementService idManagementService) {
+        this.idManagementService = idManagementService;
+    }
     @Autowired
     @Qualifier("IdManagement")
     private IdManagement idManagement;
