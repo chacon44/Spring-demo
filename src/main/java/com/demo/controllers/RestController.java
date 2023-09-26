@@ -31,13 +31,7 @@ public class RestController {
     @Qualifier("answerQuestions")
     private AnswerService answerService;
     private AnsweredQuestion answeredQuestion;
-    public void setQuestionManagementService(QuestionManagementService questionManagementService) {
-        this.questionManagementService = questionManagementService;
-    }
 
-    public void setIdManagementService(IdManagementService idManagementService) {
-        this.idManagementService = idManagementService;
-    }
     @Autowired
     @Qualifier("IdManagement")
     private IdManagement idManagement;
