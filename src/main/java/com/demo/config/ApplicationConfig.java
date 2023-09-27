@@ -1,5 +1,6 @@
 package com.demo.config;
 
+import com.demo.controllers.RestController;
 import com.demo.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,5 +29,4 @@ public class ApplicationConfig {
     public GreetingService greetingService(){
         return new GreetingService(greeting);
     }
-
 }

@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
     @Autowired
     private GreetingService greetingService;
     @Autowired
