@@ -8,7 +8,6 @@ import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
-import com.demo.service.IdManagementService;
 import com.demo.service.QuestionManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -30,19 +28,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-public class restControllerTest {
+public class RestControllerTest {
 
     @Mock
     private GreetingService greetingService;
     @Mock
     private QuestionManagementService questionManagementService;
     @Mock
-    private IdManagementService idManagementService;
-    @Mock
-    @Qualifier("answerQuestions")
     private AnswerService answerService;
     @Mock
-    @Qualifier("IdManagement")
     private IdManagement idManagement;
 
     @InjectMocks
@@ -78,7 +72,7 @@ public class restControllerTest {
         RequestDTO requestDTO = new RequestDTO("test question");
         ResponseDTO responseDTO = new ResponseDTO(1L, "test question", true);
 
-        when(questionManagementService.returnMatchedQuestion(anyString())).thenReturn(Optional.empty());
+        when(questionManagementService.returnMatchedQuestion(eq("test question"))).thenReturn(Optional.empty());
         when(answerService.getAnswer()).thenReturn(true);
         when(idManagement.incrementId()).thenReturn(1L);
         doNothing().when(questionManagementService).saveQuestion(any(ResponseDTO.class));

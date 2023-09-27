@@ -29,8 +29,4 @@ public class ApplicationConfig {
     public GreetingService greetingService(){
         return new GreetingService(greeting);
     }
-
-    @Bean
-    public RestController restController(){return new RestController();}
-
 }
