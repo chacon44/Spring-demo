@@ -68,13 +68,14 @@ public class RestControllerTest {
     @Test
     public void testPostQuestion_questionNotFound_CreatedReturned() throws Exception {
 
+        long increment = 1L;
         // Arrange
         RequestDTO requestDTO = new RequestDTO("test question");
         ResponseDTO responseDTO = new ResponseDTO(1L, "test question", true);
 
         when(questionManagementService.returnMatchedQuestion(eq("test question"))).thenReturn(Optional.empty());
         when(answerService.getAnswer()).thenReturn(true);
-        when(idManagement.incrementId()).thenReturn(1L);
+        when(idManagement.incrementId()).thenReturn(increment);
         doNothing().when(questionManagementService).saveQuestion(any(ResponseDTO.class));
 
         // Act

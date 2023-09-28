@@ -16,9 +16,6 @@ public class QuestionManagementServiceTest {
         questionManagementService = new QuestionManagementService();
     }
 
-    // TODO
-
-
     @Test
     public void save_And_Get_Saved(){
         //ACT

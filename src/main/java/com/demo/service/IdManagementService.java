@@ -13,7 +13,7 @@ public class IdManagementService implements IdManagement {
     private final AtomicLong currentId = new AtomicLong();
     private final long maxId;
 
-    public IdManagementService(@Value("${maxId:1L}") long maxId) { this.maxId = maxId; }
+    public IdManagementService(@Value("${maxId:1}") long maxId) { this.maxId = maxId; }
 
 
     @Override
