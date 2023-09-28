@@ -13,8 +13,10 @@ import java.sql.SQLException;
 @Configuration
 public class Database {
 
-        DataSource dataSource;
-        public DataSource dataSource() throws IllegalStateException {
+    DataSource dataSource;
+
+    @Bean
+    public DataSource dataSource() throws IllegalStateException {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
         dataSourceBuilder.url("jdbc:postgres://localhost:5433/postgres");

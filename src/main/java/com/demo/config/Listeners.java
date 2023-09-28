@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class Listeners implements ApplicationContextAware {
 
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(Listeners.class);
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Listeners.class);
 
     private ApplicationContext applicationContext;
 
