@@ -23,10 +23,6 @@ class RandomAnswerServiceTest {
     @InjectMocks
     private RandomAnswerService randomAnswerService;
 
-
-    //I have to check the random generation of answers, not only variable type
-    //I could get 1000 answers and check if there is a margin of 2% between the number of trues and falses
-
     @Test
     void getAnswer() {
 
