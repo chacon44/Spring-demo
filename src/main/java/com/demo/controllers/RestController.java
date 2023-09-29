@@ -61,12 +61,12 @@ public class RestController {
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
             questionManagementService.saveQuestion(responseDTO);
 
-            QuestionsRepository repository = new QuestionsRepository();
-            EntityQuestion entityQuestion = new EntityQuestion();
-            entityQuestion.setQuestion(responseDTO.question());
-            entityQuestion.setAnswer(responseDTO.answer());
-
-            repository.save(entityQuestion);
+//            QuestionsRepository repository = new QuestionsRepository();
+//            EntityQuestion entityQuestion = new EntityQuestion();
+//            entityQuestion.setQuestion(responseDTO.question());
+//            entityQuestion.setAnswer(responseDTO.answer());
+//
+//            repository.save(entityQuestion);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         }
