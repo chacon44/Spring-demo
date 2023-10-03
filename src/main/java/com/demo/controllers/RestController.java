@@ -61,7 +61,6 @@ public class RestController {
             logger.debug("question not found");
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
 
-            //Autowire question repository inside question management service
             questionManagementService.saveQuestion(responseDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
@@ -100,7 +99,7 @@ public class RestController {
         }
         else {
             ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
-            questionManagementService.saveQuestion(responseDTO);
+            questionManagementService.putQuestion(responseDTO);
             logger.debug("question put correctly");
             return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
         }
