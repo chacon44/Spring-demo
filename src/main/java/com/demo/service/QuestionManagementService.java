@@ -9,18 +9,19 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class QuestionManagementService {
+public class QuestionManagementService{
+
 
     private final Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
     public void saveQuestion(ResponseDTO responseDTO) {
+
         AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
+
         questionsMap.put(responseDTO.id(), answeredQuestion);
     }
 
     public ResponseDTO returnQuestion(long id) {
-        //this method return responseDTO in order to get its individual fields and save them in a new dto
-        //will be used in PUT request
 
         return new ResponseDTO(id, questionsMap.get(id).question(), questionsMap.get(id).answer());
     }

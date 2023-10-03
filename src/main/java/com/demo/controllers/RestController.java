@@ -1,10 +1,10 @@
 package com.demo.controllers;
 
-import com.demo.database.EntityQuestion;
 import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
+import com.demo.repository.Questions;
 import com.demo.repository.QuestionsRepository;
 import com.demo.service.GreetingService;
 import com.demo.service.IdManagementService;
@@ -23,6 +23,7 @@ import java.util.Optional;
 public class RestController {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
+
     @Autowired
     private GreetingService greetingService;
     @Autowired
@@ -59,14 +60,9 @@ public class RestController {
         } else {
             logger.debug("question not found");
             ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
-            questionManagementService.saveQuestion(responseDTO);
 
-//            QuestionsRepository repository = new QuestionsRepository();
-//            EntityQuestion entityQuestion = new EntityQuestion();
-//            entityQuestion.setQuestion(responseDTO.question());
-//            entityQuestion.setAnswer(responseDTO.answer());
-//
-//            repository.save(entityQuestion);
+            //Autowire question repository inside question management service
+            questionManagementService.saveQuestion(responseDTO);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         }
