@@ -2,6 +2,9 @@ package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
+import com.demo.repository.Questions;
+import com.demo.repository.QuestionsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,6 +14,8 @@ import java.util.Optional;
 @Service
 public class QuestionManagementService{
 
+    @Autowired
+    QuestionsRepository questionsRepository;
 
     private final Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
 
@@ -18,6 +23,13 @@ public class QuestionManagementService{
 
         AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
 
+        Questions questions = new Questions();
+
+        questions.setId(responseDTO.id());
+        questions.setQuestion(responseDTO.question());
+        questions.setAnswer(responseDTO.answer());
+
+        questionsRepository.save(questions);
         questionsMap.put(responseDTO.id(), answeredQuestion);
     }
 
