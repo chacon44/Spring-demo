@@ -1,5 +1,6 @@
 package com.demo.config;
 
+import com.demo.database.Database;
 import com.demo.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
