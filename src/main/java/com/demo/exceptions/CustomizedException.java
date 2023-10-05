@@ -1,5 +1,8 @@
 package com.demo.exceptions;
 
+import lombok.Getter;
+
+@Getter
 public class CustomizedException extends RuntimeException {
     private final String description;
     private final ErrorCode code;
@@ -10,12 +13,5 @@ public class CustomizedException extends RuntimeException {
         this.code = code;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public ErrorCode getCode() {
-        return code;
-    }
 }
 

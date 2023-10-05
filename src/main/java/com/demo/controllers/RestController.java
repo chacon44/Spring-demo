@@ -4,10 +4,7 @@ import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
 import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
-import com.demo.repository.Questions;
-import com.demo.repository.QuestionsRepository;
 import com.demo.service.GreetingService;
-import com.demo.service.IdManagementService;
 import com.demo.service.QuestionManagementService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +25,6 @@ public class RestController {
     private GreetingService greetingService;
     @Autowired
     private QuestionManagementService questionManagementService;
-    @Autowired
-    private IdManagementService idManagementService;
     @Autowired
     @Qualifier("answerQuestions")
     private AnswerService answerService;
@@ -54,6 +49,7 @@ public class RestController {
         }
 
         Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
+
         if (matchedQuestion.isPresent()) {
             logger.debug("question found");
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
@@ -99,7 +95,7 @@ public class RestController {
         }
         else {
             ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
-            questionManagementService.putQuestion(responseDTO);
+            questionManagementService.putAnswerIntoQuestion(responseDTO);
             logger.debug("question put correctly");
             return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
         }

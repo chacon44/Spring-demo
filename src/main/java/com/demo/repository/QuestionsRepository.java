@@ -1,16 +1,18 @@
 package com.demo.repository;
 
-import java.util.List;
+import com.demo.dto.ResponseDTO;
+import com.demo.model.AnsweredQuestion;
+
 import java.util.Optional;
 
 public interface QuestionsRepository{
 
-    int save(Questions questions);
+    int save(String question, boolean answer);
 
-    int update(Questions questions);
+    int updateAnswer(long Id, boolean answer);
 
     int deleteById(Long id);
-    List<Questions> findByQuestion(String question);
-    Optional<Questions> findById(Long id);
-    String getQuestionById(Long id);
+    Optional <ResponseDTO> findByQuestion(String question);
+    Optional<AnsweredQuestion> findById(Long id);
+    ResponseDTO returnQuestion (Long id);
 }
