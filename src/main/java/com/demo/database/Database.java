@@ -1,17 +1,15 @@
 package com.demo.database;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
 import java.sql.Statement;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -43,6 +41,7 @@ public class Database {
 
         //Table parameters
 
+        //Create a global value for this
         String TABLE_NAME = "QUESTIONS";
         String COLUMN_ID = "ID SERIAL PRIMARY KEY NOT NULL";
         String COLUMN_QUESTION = "QUESTION TEXT NOT NULL";
@@ -55,16 +54,19 @@ public class Database {
 
             String dropTableIfExist = "DROP TABLE IF EXISTS "+TABLE_NAME;
 
-            String createTable = "CREATE TABLE "+ TABLE_NAME+
-                    " ("+COLUMN_ID +", "+ COLUMN_QUESTION +", "+ COLUMN_ANSWER +")";
+            String createTable = ("CREATE TABLE IF NOT EXISTS %s(%s,%s,%s)").formatted(
+                    TABLE_NAME,
+                            COLUMN_ID,
+                            COLUMN_QUESTION,
+                            COLUMN_ANSWER);
 
-            stmt.execute(dropTableIfExist);
+            //stmt.execute(dropTableIfExist);
             stmt.executeUpdate(createTable);
-            stmt.close();
+
+            //stmt.close();
             conn.close();
         } catch (SQLException e) {
             LOGGER.log(Level.SEVERE, "Could not establish connection", e);
-            System.exit(0);
         }
         LOGGER.log(Level.INFO, "Table created successfully");
 
