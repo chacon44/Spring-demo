@@ -2,7 +2,6 @@ package com.demo.controllers;
 
 import com.demo.dto.*;
 import com.demo.interfaces.AnswerService;
-import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.QuestionManagementService;
@@ -30,9 +29,9 @@ public class RestController {
     private AnswerService answerService;
     private AnsweredQuestion answeredQuestion;
 
-    @Autowired
-    @Qualifier("IdManagement")
-    private IdManagement idManagement;
+    //@Autowired
+    //@Qualifier("IdManagement")
+    //private IdManagement idManagement;
 
     @GetMapping(value = "/greeting", produces = {"application/json"})
     public GreetingResponse greeting() {
@@ -55,7 +54,7 @@ public class RestController {
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
             logger.debug("question not found");
-            ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
+            ResponseDTO responseDTO = new ResponseDTO(1, requestDTO.question(), answerService.getAnswer());
 
             questionManagementService.saveQuestion(responseDTO);
 
