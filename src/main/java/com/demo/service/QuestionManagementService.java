@@ -17,9 +17,9 @@ public class QuestionManagementService{
     JdbcQuestionsRepository jdbcQuestionsRepository;
     private static final Logger logger = LoggerFactory.getLogger(QuestionManagementService.class);
 
-    public void saveQuestion(ResponseDTO responseDTO) {
+    public void saveQuestion(AnsweredQuestion answeredQuestion) {
 
-        jdbcQuestionsRepository.save(responseDTO.question(),responseDTO.answer());
+        jdbcQuestionsRepository.save(answeredQuestion.question(),answeredQuestion.answer());
     }
 
     public void putAnswerIntoQuestion(ResponseDTO responseDTO) {
