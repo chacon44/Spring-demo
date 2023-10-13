@@ -5,7 +5,6 @@ import com.demo.dto.RequestAnswerDTO;
 import com.demo.dto.RequestDTO;
 import com.demo.dto.ResponseDTO;
 import com.demo.interfaces.AnswerService;
-import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.QuestionManagementService;
@@ -36,8 +35,6 @@ public class RestControllerTest {
     private QuestionManagementService questionManagementService;
     @Mock
     private AnswerService answerService;
-    @Mock
-    private IdManagement idManagement;
 
     @InjectMocks
     private RestController restController;
@@ -75,7 +72,7 @@ public class RestControllerTest {
 
         when(questionManagementService.returnMatchedQuestion(eq("test question"))).thenReturn(Optional.empty());
         when(answerService.getAnswer()).thenReturn(true);
-        when(idManagement.incrementId()).thenReturn(increment);
+        //when(idManagement.incrementId()).thenReturn(increment);
         doNothing().when(questionManagementService).saveQuestion(any(ResponseDTO.class));
 
         // Act
