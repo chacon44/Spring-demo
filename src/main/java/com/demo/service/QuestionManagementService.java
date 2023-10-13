@@ -16,8 +16,6 @@ public class QuestionManagementService{
     @Autowired
     JdbcQuestionsRepository jdbcQuestionsRepository;
     private static final Logger logger = LoggerFactory.getLogger(QuestionManagementService.class);
-    @Autowired
-    JdbcTemplate jdbcTemplate;
 
     public void saveQuestion(ResponseDTO responseDTO) {
 

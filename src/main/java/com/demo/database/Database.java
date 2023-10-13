@@ -52,14 +52,13 @@ public class Database {
 
             stmt = conn.createStatement();
 
-            String dropTableIfExist = "DROP TABLE IF EXISTS "+TABLE_NAME;
-
             String createTable = ("CREATE TABLE IF NOT EXISTS %s(%s,%s,%s)").formatted(
                     TABLE_NAME,
                             COLUMN_ID,
                             COLUMN_QUESTION,
                             COLUMN_ANSWER);
 
+            //String dropTableIfExist = "DROP TABLE IF EXISTS "+TABLE_NAME;
             //stmt.execute(dropTableIfExist);
             stmt.executeUpdate(createTable);
 
