@@ -68,7 +68,7 @@ public class JdbcQuestionsRepository implements QuestionsRepository {
     }
 
     @Override
-    public ResponseDTO returnQuestion (Long id){
+    public ResponseDTO returnQuestion(Long id) {
         String query = ("SELECT * from %s WHERE %s = ?").formatted(TABLE_NAME, COLUMN_ID);
 
         return jdbcTemplate.queryForObject(query, (resultSet, rowNum) ->
@@ -82,9 +82,9 @@ public class JdbcQuestionsRepository implements QuestionsRepository {
     }
 
     @Override
-    public Optional <ResponseDTO> findByQuestion(String question) {
+    public Optional<ResponseDTO> findByQuestion(String question) {
 
-        String query = "SELECT * from " + TABLE_NAME + " WHERE " + COLUMN_QUESTION + " = '"+question+"'";
+        String query = "SELECT * from " + TABLE_NAME + " WHERE " + COLUMN_QUESTION + " = '" + question + "'";
 
         List<ResponseDTO> responses = jdbcTemplate.query(
                 query,
@@ -95,13 +95,31 @@ public class JdbcQuestionsRepository implements QuestionsRepository {
                 )
         );
 
-        if (responses.isEmpty()){
+        if (responses.isEmpty()) {
             return Optional.empty();
-        }
-        else {
+        } else {
 
             return Optional.of(responses.get(0));
         }
+    }
+
+    @Override
+    public ResponseDTO returnIdByQuestion(String question) {
+
+        String query = "SELECT * from " + TABLE_NAME + " WHERE " + COLUMN_QUESTION + " = '" + question + "'";
+
+        List<ResponseDTO> responses = jdbcTemplate.query(
+                query,
+                (resultSet, i) -> new ResponseDTO(
+                        resultSet.getLong(COLUMN_ID),
+                        question,
+                        resultSet.getBoolean(COLUMN_ANSWER)
+                )
+        );
+
+            return responses.get(0);
+
+
     }
 
 

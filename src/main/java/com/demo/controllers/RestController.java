@@ -58,7 +58,8 @@ public class RestController {
 
             questionManagementService.saveQuestion(responseDTO);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+            ResponseDTO responseDTO2 = questionManagementService.returnIdByQuestion(requestDTO.question());
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO2);
         }
     }
 
