@@ -1,6 +1,7 @@
 package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
+import com.demo.model.AnsweredQuestion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ public class QuestionManagementServiceTest {
 
     ResponseDTO responseDTO = new ResponseDTO(1L, "Test question", true);
 
+    AnsweredQuestion answeredQuestion = new AnsweredQuestion("Test question", true);
     private QuestionManagementService questionManagementService;
     @BeforeEach
     public void setUp() {
@@ -19,7 +21,7 @@ public class QuestionManagementServiceTest {
     @Test
     public void save_And_Get_Saved(){
         //ACT
-        questionManagementService.saveQuestion(responseDTO);
+        questionManagementService.saveQuestion(answeredQuestion);
 
         //ASSERT
 
@@ -53,7 +55,7 @@ public class QuestionManagementServiceTest {
     public void save_Question_Multiple_Times(){
 
         //ACT
-        questionManagementService.saveQuestion(responseDTO);
+        questionManagementService.saveQuestion(answeredQuestion);
 
         //Check if id is stored in question map
         assertFalse(questionManagementService.getQuestion(responseDTO.id()).isEmpty());
@@ -65,11 +67,12 @@ public class QuestionManagementServiceTest {
 
         //save again with different id but same question
         ResponseDTO responseDTO_2 = new ResponseDTO(responseDTO.id() +1, responseDTO.question(), responseDTO.answer());
-        questionManagementService.saveQuestion(responseDTO_2);
+        AnsweredQuestion answeredQuestion1 = new AnsweredQuestion("Test 2", false);
+        questionManagementService.saveQuestion(answeredQuestion1);
 
         //ASSERT
 
-        questionManagementService.saveQuestion(responseDTO);
+        questionManagementService.saveQuestion(answeredQuestion);
         assertEquals(responseDTO.question(),questionManagementService.getQuestion(responseDTO.id()).get().question());
 
         //It should return the same question in other id
@@ -82,7 +85,7 @@ public class QuestionManagementServiceTest {
         //ACT
 
         //I firstly save the question and answer
-        questionManagementService.saveQuestion(responseDTO);
+        questionManagementService.saveQuestion(answeredQuestion);
 
         //save it in the questions map with its respective id
         //questionsMap.put(responseDTO.id(), answeredQuestion);
@@ -111,8 +114,7 @@ public class QuestionManagementServiceTest {
     public void save_Get_Remove_and_Get_Again(){
 
         //ACT
-        questionManagementService.saveQuestion(responseDTO);
-        //questionsMap.put(responseDTO.id(), answeredQuestion);
+        questionManagementService.saveQuestion(answeredQuestion);
 
         //Check if id is stored in question map
         assertFalse(questionManagementService.getQuestion(responseDTO.id()).isEmpty());

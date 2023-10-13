@@ -1,18 +1,17 @@
 package com.demo.controllers;
 
 import com.demo.dto.*;
-import com.demo.interfaces.AnswerService;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
 import com.demo.service.QuestionManagementService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Random;
 
 
 @org.springframework.web.bind.annotation.RestController
@@ -24,14 +23,6 @@ public class RestController {
     private GreetingService greetingService;
     @Autowired
     private QuestionManagementService questionManagementService;
-    @Autowired
-    @Qualifier("answerQuestions")
-    private AnswerService answerService;
-    private AnsweredQuestion answeredQuestion;
-
-//    @Autowired
-//    @Qualifier("IdManagement")
-//    private IdManagement idManagement;
 
     @GetMapping(value = "/greeting", produces = {"application/json"})
     public GreetingResponse greeting() {
@@ -54,9 +45,7 @@ public class RestController {
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
             logger.debug("question not found");
-            ResponseDTO responseDTO = new ResponseDTO(1, requestDTO.question(), answerService.getAnswer());
-
-            questionManagementService.saveQuestion(responseDTO);
+            questionManagementService.saveQuestion(new AnsweredQuestion(requestDTO.question(), new Random().nextBoolean()));
 
             ResponseDTO responseDTO2 = questionManagementService.returnIdByQuestion(requestDTO.question());
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO2);
