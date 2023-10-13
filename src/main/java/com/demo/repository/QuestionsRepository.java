@@ -15,4 +15,6 @@ public interface QuestionsRepository{
     Optional <ResponseDTO> findByQuestion(String question);
     Optional<AnsweredQuestion> findById(Long id);
     ResponseDTO returnQuestion (Long id);
+
+    ResponseDTO returnIdByQuestion(String question);
 }

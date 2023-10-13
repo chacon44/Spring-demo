@@ -32,6 +32,10 @@ public class QuestionManagementService{
         return jdbcQuestionsRepository.returnQuestion(id);
     }
 
+    public ResponseDTO returnIdByQuestion(String question){
+        return jdbcQuestionsRepository.returnIdByQuestion(question);
+    }
+
     public Optional<AnsweredQuestion> getQuestion(long id) {
 
         return jdbcQuestionsRepository.findById(id);
