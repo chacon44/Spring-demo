@@ -4,10 +4,7 @@ import com.demo.dto.ErrorDTO;
 import com.demo.dto.RequestAnswerDTO;
 import com.demo.dto.RequestDTO;
 import com.demo.dto.ResponseDTO;
-import com.demo.interfaces.AnswerService;
-import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
-import com.demo.service.GreetingService;
 import com.demo.service.QuestionManagementService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,13 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RestControllerTest {
 
     @Mock
-    private GreetingService greetingService;
-    @Mock
     private QuestionManagementService questionManagementService;
-    @Mock
-    private AnswerService answerService;
-    @Mock
-    private IdManagement idManagement;
 
     @InjectMocks
     private RestController restController;
@@ -73,9 +64,7 @@ public class RestControllerTest {
         ResponseDTO responseDTO = new ResponseDTO(1L, "test question", true);
 
         when(questionManagementService.returnMatchedQuestion(eq("test question"))).thenReturn(Optional.empty());
-        when(answerService.getAnswer()).thenReturn(true);
-        when(idManagement.incrementId()).thenReturn(1L);
-        doNothing().when(questionManagementService).saveQuestion(any(ResponseDTO.class));
+        doNothing().when(questionManagementService).saveQuestion(any(AnsweredQuestion.class));
 
         // Act
         mockMvc.perform(post("/demo")

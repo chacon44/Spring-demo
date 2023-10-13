@@ -2,44 +2,52 @@ package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
+import com.demo.repository.JdbcQuestionsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class QuestionManagementService {
+public class QuestionManagementService{
 
-    private final Map<Long, AnsweredQuestion> questionsMap = new HashMap<>();
+    @Autowired
+    JdbcQuestionsRepository jdbcQuestionsRepository;
+    private static final Logger logger = LoggerFactory.getLogger(QuestionManagementService.class);
 
-    public void saveQuestion(ResponseDTO responseDTO) {
-        AnsweredQuestion answeredQuestion = new AnsweredQuestion(responseDTO.question(), responseDTO.answer());
-        questionsMap.put(responseDTO.id(), answeredQuestion);
+    public void saveQuestion(AnsweredQuestion answeredQuestion) {
+
+        jdbcQuestionsRepository.save(answeredQuestion.question(),answeredQuestion.answer());
+    }
+
+    public void putAnswerIntoQuestion(ResponseDTO responseDTO) {
+
+        jdbcQuestionsRepository.updateAnswer(responseDTO.id(), responseDTO.answer());
     }
 
     public ResponseDTO returnQuestion(long id) {
-        //this method return responseDTO in order to get its individual fields and save them in a new dto
-        //will be used in PUT request
 
-        return new ResponseDTO(id, questionsMap.get(id).question(), questionsMap.get(id).answer());
+        return jdbcQuestionsRepository.returnQuestion(id);
+    }
+
+    public ResponseDTO returnIdByQuestion(String question){
+        return jdbcQuestionsRepository.returnIdByQuestion(question);
     }
 
     public Optional<AnsweredQuestion> getQuestion(long id) {
 
-        return Optional.ofNullable(questionsMap.get(id));
+        return jdbcQuestionsRepository.findById(id);
     }
 
     public Optional<AnsweredQuestion> deleteQuestion(long id) {
-        return Optional.ofNullable(questionsMap.remove(id));
+
+        jdbcQuestionsRepository.deleteById(id);
+        return jdbcQuestionsRepository.findById(id);
     }
 
     public Optional<ResponseDTO> returnMatchedQuestion(String question) {
-        return questionsMap.entrySet()
-                .stream()
-                .filter(
-                        entry -> entry.getValue().question().equals(question))
-                .findFirst()
-                .map(entry -> new ResponseDTO(entry.getKey(), entry.getValue().question(), entry.getValue().answer()));
+
+        return jdbcQuestionsRepository.findByQuestion(question);
     }
 }

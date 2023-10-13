@@ -1,40 +1,28 @@
 package com.demo.controllers;
 
 import com.demo.dto.*;
-import com.demo.interfaces.AnswerService;
-import com.demo.interfaces.IdManagement;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.GreetingService;
-import com.demo.service.IdManagementService;
 import com.demo.service.QuestionManagementService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.Random;
 
 
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
+
     @Autowired
     private GreetingService greetingService;
     @Autowired
     private QuestionManagementService questionManagementService;
-    @Autowired
-    private IdManagementService idManagementService;
-    @Autowired
-    @Qualifier("answerQuestions")
-    private AnswerService answerService;
-    private AnsweredQuestion answeredQuestion;
-
-    @Autowired
-    @Qualifier("IdManagement")
-    private IdManagement idManagement;
 
     @GetMapping(value = "/greeting", produces = {"application/json"})
     public GreetingResponse greeting() {
@@ -51,14 +39,16 @@ public class RestController {
         }
 
         Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
+
         if (matchedQuestion.isPresent()) {
             logger.debug("question found");
             return ResponseEntity.status(HttpStatus.FOUND).body(matchedQuestion.get());
         } else {
             logger.debug("question not found");
-            ResponseDTO responseDTO = new ResponseDTO(idManagement.incrementId(), requestDTO.question(), answerService.getAnswer());
-            questionManagementService.saveQuestion(responseDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+            questionManagementService.saveQuestion(new AnsweredQuestion(requestDTO.question(), new Random().nextBoolean()));
+
+            ResponseDTO responseDTO2 = questionManagementService.returnIdByQuestion(requestDTO.question());
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO2);
         }
     }
 
@@ -94,7 +84,7 @@ public class RestController {
         }
         else {
             ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
-            questionManagementService.saveQuestion(responseDTO);
+            questionManagementService.putAnswerIntoQuestion(responseDTO);
             logger.debug("question put correctly");
             return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
         }
