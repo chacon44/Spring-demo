@@ -2,7 +2,6 @@ package com.demo.controllers;
 
 import com.demo.dto.*;
 import com.demo.model.AnsweredQuestion;
-import com.demo.service.GreetingService;
 import com.demo.service.QuestionManagementService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +19,7 @@ public class RestController {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
 
     @Autowired
-    private GreetingService greetingService;
-    @Autowired
     private QuestionManagementService questionManagementService;
-
-    @GetMapping(value = "/greeting", produces = {"application/json"})
-    public GreetingResponse greeting() {
-        return new GreetingResponse(greetingService.greeting());
-    }
 
     @PostMapping(value = "/demo", consumes = {"application/json"}, produces = {"application/json"})
     ResponseEntity<?> postQuestion(@RequestBody RequestDTO requestDTO) {
@@ -47,8 +39,8 @@ public class RestController {
             logger.debug("question not found");
             questionManagementService.saveQuestion(new AnsweredQuestion(requestDTO.question(), new Random().nextBoolean()));
 
-            ResponseDTO responseDTO2 = questionManagementService.returnIdByQuestion(requestDTO.question());
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO2);
+            ResponseDTO responseDTO = questionManagementService.returnIdByQuestion(requestDTO.question());
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         }
     }
 

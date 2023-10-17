@@ -8,17 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
+import static com.demo.database.DatabaseData.*;
+
 @Repository
 public class JdbcQuestionsRepository implements QuestionsRepository {
-
-    String TABLE_NAME = "QUESTIONS";
-    String COLUMN_QUESTION = "Question";
-    String COLUMN_ANSWER = "Answer";
-    String COLUMN_ID = "Id";
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RestController.class);
 
@@ -116,10 +112,7 @@ public class JdbcQuestionsRepository implements QuestionsRepository {
                         resultSet.getBoolean(COLUMN_ANSWER)
                 )
         );
-
             return responses.get(0);
-
-
     }
 
 

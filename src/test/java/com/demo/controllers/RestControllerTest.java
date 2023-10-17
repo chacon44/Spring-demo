@@ -47,15 +47,6 @@ public class RestControllerTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.restController).build();
     }
-
-    @Test
-    public void testGreeting() throws Exception {
-        mockMvc.perform(get("/greeting")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-
     @Test
     public void testPostQuestion_questionNotFound_CreatedReturned() throws Exception {
 

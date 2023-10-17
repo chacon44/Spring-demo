@@ -22,12 +22,7 @@ public class ControllerAdviceClass extends ResponseEntityExceptionHandler {
     }
     @ExceptionHandler(CustomizedException.class)
     public ResponseEntity<Object> handleMyException(CustomizedException ex, WebRequest request) throws Exception {
-        if (ex.getCode() == ErrorCode.OUT_OF_IDS) {
-
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(ErrorCode.OUT_OF_IDS, "Unable to generate new ID, maximum value was reached");
-
-            return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
-        } else return super.handleException(ex, request);
+        return super.handleException(ex, request);
     }
 
 
