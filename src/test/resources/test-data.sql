@@ -1,1 +1,3 @@
-INSERT INTO QUESTION VALUES (1, 'question1', true);
+INSERT INTO QUESTIONS VALUES (2, 'question2', false);
+INSERT INTO QUESTIONS VALUES (3, 'question3', true);
+INSERT INTO QUESTIONS VALUES (4, 'question4', false);
