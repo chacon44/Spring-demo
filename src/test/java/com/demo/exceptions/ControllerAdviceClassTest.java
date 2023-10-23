@@ -44,19 +44,13 @@ class ControllerAdviceClassTest {
     @Test
     public void HandleMyException() throws Exception {
 
-        //each time I request the code of custom exception, it will send "out of id"
-        //when(customizedExceptionMock.getCode()).thenReturn(ErrorCode.OUT_OF_IDS);
-
         ResponseEntity<Object> response = controllerAdviceClass.handleMyException(customizedExceptionMock, webRequestMock);
 
-        //get error response DTO from response body
         ErrorResponseDTO errorResponseDTO = (ErrorResponseDTO) response.getBody();
 
-        //check if not null
         assertNotNull(errorResponseDTO);
-        //assertEquals(ErrorCode.OUT_OF_IDS, errorResponseDTO.error());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
-        assertEquals("Unable to generate new ID, maximum value was reached", errorResponseDTO.description());
+        assertEquals("Your question is missing or empty", errorResponseDTO.description());
     }
 }

@@ -39,7 +39,7 @@ public class RestController {
             logger.debug("question not found");
             questionManagementService.saveQuestion(new AnsweredQuestion(requestDTO.question(), new Random().nextBoolean()));
 
-            ResponseDTO responseDTO = questionManagementService.returnIdByQuestion(requestDTO.question());
+            Optional <ResponseDTO> responseDTO = questionManagementService.returnIdByQuestion(requestDTO.question());
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         }
     }
@@ -68,17 +68,17 @@ public class RestController {
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
-    ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
+    ResponseEntity< Optional<ResponseDTO> > putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
         if (questionManagementService.getQuestion(id).isEmpty()){
             logger.error("This id doesn't exist");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         else {
-            ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).question(), requestAnswerDTO.answer());
+            ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).get().question(), requestAnswerDTO.answer());
             questionManagementService.putAnswerIntoQuestion(responseDTO);
             logger.debug("question put correctly");
-            return ResponseEntity.status(HttpStatus.OK).body(questionManagementService.returnQuestion(id));
+            return ResponseEntity.status(HttpStatus.OK).body((questionManagementService.returnQuestion(id)));
         }
     }
 }

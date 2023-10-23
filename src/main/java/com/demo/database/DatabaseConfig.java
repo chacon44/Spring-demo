@@ -61,6 +61,7 @@ public class DatabaseConfig {
 
             } catch (SQLException e){
                 LOGGER.log(Level.SEVERE, TABLE_NOT_CREATED, e);
+                throw e;
             }
 
             ArrayList <String> Columns = new ArrayList<>(Arrays.asList(COLUMN_ID,COLUMN_QUESTION,COLUMN_ANSWER));

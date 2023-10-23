@@ -2,52 +2,58 @@ package com.demo.service;
 
 import com.demo.dto.ResponseDTO;
 import com.demo.model.AnsweredQuestion;
-import com.demo.repository.JdbcQuestionsRepository;
+import com.demo.repository.QuestionsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
+
 @Service
-public class QuestionManagementService{
+public class QuestionManagementService {
+
+    private final QuestionsRepository questionsRepository;
+    private static final Logger logger = LoggerFactory.getLogger(QuestionManagementService.class);
 
     @Autowired
-    JdbcQuestionsRepository jdbcQuestionsRepository;
-    private static final Logger logger = LoggerFactory.getLogger(QuestionManagementService.class);
+    public QuestionManagementService(QuestionsRepository questionsRepository) {
+        this.questionsRepository = questionsRepository;
+    }
 
     public void saveQuestion(AnsweredQuestion answeredQuestion) {
 
-        jdbcQuestionsRepository.save(answeredQuestion.question(),answeredQuestion.answer());
+        questionsRepository.save(answeredQuestion.question(), answeredQuestion.answer());
     }
 
     public void putAnswerIntoQuestion(ResponseDTO responseDTO) {
 
-        jdbcQuestionsRepository.updateAnswer(responseDTO.id(), responseDTO.answer());
+        questionsRepository.updateAnswer(responseDTO.id(), responseDTO.answer());
     }
 
-    public ResponseDTO returnQuestion(long id) {
+    public Optional <ResponseDTO> returnQuestion(long id) {
 
-        return jdbcQuestionsRepository.returnQuestion(id);
+        return questionsRepository.returnQuestion(id);
     }
 
-    public ResponseDTO returnIdByQuestion(String question){
-        return jdbcQuestionsRepository.returnIdByQuestion(question);
+    public Optional <ResponseDTO> returnIdByQuestion(String question) {
+        return questionsRepository.returnIdByQuestion(question);
     }
 
     public Optional<AnsweredQuestion> getQuestion(long id) {
 
-        return jdbcQuestionsRepository.findById(id);
+        return questionsRepository.findById(id);
     }
 
     public Optional<AnsweredQuestion> deleteQuestion(long id) {
 
-        jdbcQuestionsRepository.deleteById(id);
-        return jdbcQuestionsRepository.findById(id);
+        questionsRepository.deleteById(id);
+        return questionsRepository.findById(id);
     }
 
     public Optional<ResponseDTO> returnMatchedQuestion(String question) {
 
-        return jdbcQuestionsRepository.findByQuestion(question);
+        return questionsRepository.findByQuestion(question);
     }
 }
