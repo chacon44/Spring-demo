@@ -7,14 +7,14 @@ import java.util.Optional;
 
 public interface QuestionsRepository{
 
-    int save(String question, boolean answer);
+    boolean save(String question, boolean answer);
 
-    int updateAnswer(long Id, boolean answer);
+    boolean updateAnswer(long Id, boolean answer);
 
-    int deleteById(Long id);
+    boolean deleteById(Long id);
     Optional <ResponseDTO> findByQuestion(String question);
     Optional<AnsweredQuestion> findById(Long id);
-    ResponseDTO returnQuestion (Long id);
+    Optional <ResponseDTO> returnQuestion (Long id);
 
-    ResponseDTO returnIdByQuestion(String question);
+    Optional <ResponseDTO> returnIdByQuestion(String question);
 }

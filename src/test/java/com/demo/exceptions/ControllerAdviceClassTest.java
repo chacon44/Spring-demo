@@ -44,20 +44,29 @@ class ControllerAdviceClassTest {
 
     @Test
     public void HandleMyException() throws Exception {
-
-        //each time I request the code of custom exception, it will send "out of id"
-        when(customizedExceptionMock.getCode()).thenReturn(ErrorCode.OUT_OF_IDS);
+        when(customizedExceptionMock.getCode()).thenReturn(ErrorCode.DATABASE_ERROR);
 
         ResponseEntity<Object> response = controllerAdviceClass.handleMyException(customizedExceptionMock, webRequestMock);
 
-        //get error response DTO from response body
         ErrorResponseDTO errorResponseDTO = (ErrorResponseDTO) response.getBody();
 
-        //check if not null
         assertNotNull(errorResponseDTO);
-        assertEquals(ErrorCode.OUT_OF_IDS, errorResponseDTO.error());
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
-        assertEquals("Unable to generate new ID, maximum value was reached", errorResponseDTO.description());
+        assertEquals(ErrorCode.DATABASE_ERROR, errorResponseDTO.error());
+    }
+
+    @Test
+    public void HandleMyException_technicalError() throws Exception {
+        when(customizedExceptionMock.getCode()).thenReturn(ErrorCode.TECHNICAL_ERROR);
+
+        ResponseEntity<Object> response = controllerAdviceClass.handleMyException(customizedExceptionMock, webRequestMock);
+
+        ErrorResponseDTO errorResponseDTO = (ErrorResponseDTO) response.getBody();
+
+        assertNotNull(errorResponseDTO);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+
+        assertEquals(ErrorCode.TECHNICAL_ERROR, errorResponseDTO.error());
     }
 }

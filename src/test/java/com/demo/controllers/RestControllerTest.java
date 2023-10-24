@@ -47,24 +47,21 @@ public class RestControllerTest {
     public void setup() {
         this.mockMvc = MockMvcBuilders.standaloneSetup(this.restController).build();
     }
-
-    @Test
-    public void testGreeting() throws Exception {
-        mockMvc.perform(get("/greeting")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
-
-
     @Test
     public void testPostQuestion_questionNotFound_CreatedReturned() throws Exception {
 
         // Arrange
         RequestDTO requestDTO = new RequestDTO("test question");
-        ResponseDTO responseDTO = new ResponseDTO(1L, "test question", true);
+        ResponseDTO responseDTO_temp = new ResponseDTO(1L, "test question", true);
+        Optional<ResponseDTO> responseDTO = Optional.of(responseDTO_temp);
 
-        when(questionManagementService.returnMatchedQuestion(eq("test question"))).thenReturn(Optional.empty());
-        doNothing().when(questionManagementService).saveQuestion(any(AnsweredQuestion.class));
+        AnsweredQuestion answeredQuestion_temp = new AnsweredQuestion("test question", true);
+        AnsweredQuestion answeredQuestion_temp2 = new AnsweredQuestion("test question", false);
+
+        when(questionManagementService.returnIdByQuestion(eq("test question"))).thenReturn(Optional.empty(), Optional.of(responseDTO_temp));
+
+        lenient().doNothing().when(questionManagementService).saveQuestion(answeredQuestion_temp);
+        lenient().doNothing().when(questionManagementService).saveQuestion(answeredQuestion_temp2);
 
         // Act
         mockMvc.perform(post("/demo")
@@ -72,9 +69,9 @@ public class RestControllerTest {
                         .content(asJsonString(requestDTO)))
                 //Assert
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(responseDTO.id()), Long.class))
-                .andExpect(jsonPath("$.question", is(responseDTO.question())))
-                .andExpect(jsonPath("$.answer", is(responseDTO.answer())))
+                .andExpect(jsonPath("$.id", is(responseDTO.get().id()), Long.class))
+                .andExpect(jsonPath("$.question", is(responseDTO.get().question())))
+                .andExpect(jsonPath("$.answer", is(responseDTO.get().answer())))
                 .andExpect(status().isCreated());
 
     }
@@ -86,7 +83,7 @@ public class RestControllerTest {
         RequestDTO requestDTO = new RequestDTO("test question");
         ResponseDTO responseDTO = new ResponseDTO(1L, "test question", true);
 
-        when(questionManagementService.returnMatchedQuestion(anyString())).thenReturn(Optional.of(responseDTO));
+        when(questionManagementService.returnIdByQuestion(anyString())).thenReturn(Optional.of(responseDTO));
 
         // Act
         mockMvc.perform(post("/demo")
@@ -206,7 +203,7 @@ public class RestControllerTest {
         long id = 1L;
         RequestAnswerDTO requestAnswerDTO = new RequestAnswerDTO(true);
 
-        when(questionManagementService.getQuestion(id)).thenReturn(Optional.empty());
+        when(questionManagementService.returnQuestion(id)).thenReturn(Optional.empty());
 
         mockMvc.perform(put("/demo/" + id)
                         .accept(MediaType.APPLICATION_JSON)
@@ -220,10 +217,12 @@ public class RestControllerTest {
 
         long id = 1L;
         RequestAnswerDTO requestAnswerDTO = new RequestAnswerDTO(true);
-        AnsweredQuestion answeredQuestion = new AnsweredQuestion("test", true);
-        ResponseDTO responseDTO = new ResponseDTO(1L, answeredQuestion.question(), answeredQuestion.answer());
+        AnsweredQuestion answeredQuestion_temp = new AnsweredQuestion("test", true);
+        Optional<AnsweredQuestion> answeredQuestion = Optional.of(answeredQuestion_temp);
 
-        when(questionManagementService.getQuestion(id)).thenReturn(Optional.of(answeredQuestion));
+        ResponseDTO responseDTO_temp = new ResponseDTO(1L, answeredQuestion.get().question(), answeredQuestion.get().answer());
+        Optional<ResponseDTO> responseDTO = Optional.of(responseDTO_temp);
+
         when(questionManagementService.returnQuestion(id)).thenReturn(responseDTO);
 
         mockMvc.perform(put("/demo/" + id)
@@ -231,9 +230,9 @@ public class RestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(requestAnswerDTO)))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id", is(responseDTO.id()), Long.class))
-                .andExpect(jsonPath("$.question", is(responseDTO.question())))
-                .andExpect(jsonPath("$.answer", is(responseDTO.answer())))
+                .andExpect(jsonPath("$.id", is(responseDTO.get().id()), Long.class))
+                .andExpect(jsonPath("$.question", is(responseDTO.get().question())))
+                .andExpect(jsonPath("$.answer", is(responseDTO.get().answer())))
                 .andExpect(status().isOk());
     }
 }

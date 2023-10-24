@@ -20,16 +20,16 @@ public class ControllerAdviceClass extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.METHOD_NOT_ALLOWED);
     }
+
     @ExceptionHandler(CustomizedException.class)
-    public ResponseEntity<Object> handleMyException(CustomizedException ex, WebRequest request) throws Exception {
-        if (ex.getCode() == ErrorCode.OUT_OF_IDS) {
-
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(ErrorCode.OUT_OF_IDS, "Unable to generate new ID, maximum value was reached");
-
-            return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
-        } else return super.handleException(ex, request);
+    public ResponseEntity<Object> handleMyException(CustomizedException ex, WebRequest request){
+        if (ex.getCode() == ErrorCode.DATABASE_ERROR) {
+            logger.debug("Database error");
+            return ResponseEntity.internalServerError().body(new ErrorResponseDTO(ErrorCode.DATABASE_ERROR, "Database error"));
+        } else {
+            return ResponseEntity.internalServerError().body(new ErrorResponseDTO(ErrorCode.TECHNICAL_ERROR, "Unexpected error"));
+        }
     }
-
 
 
 }
