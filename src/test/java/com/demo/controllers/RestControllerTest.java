@@ -56,9 +56,12 @@ public class RestControllerTest {
         Optional<ResponseDTO> responseDTO = Optional.of(responseDTO_temp);
 
         AnsweredQuestion answeredQuestion_temp = new AnsweredQuestion("test question", true);
+        AnsweredQuestion answeredQuestion_temp2 = new AnsweredQuestion("test question", false);
 
-        when(questionManagementService.returnMatchedQuestion(eq("test question"))).thenReturn(Optional.empty());
-        doNothing().when(questionManagementService).saveQuestion(answeredQuestion_temp);
+        when(questionManagementService.returnIdByQuestion(eq("test question"))).thenReturn(Optional.empty(), Optional.of(responseDTO_temp));
+
+        lenient().doNothing().when(questionManagementService).saveQuestion(answeredQuestion_temp);
+        lenient().doNothing().when(questionManagementService).saveQuestion(answeredQuestion_temp2);
 
         // Act
         mockMvc.perform(post("/demo")
@@ -80,7 +83,7 @@ public class RestControllerTest {
         RequestDTO requestDTO = new RequestDTO("test question");
         ResponseDTO responseDTO = new ResponseDTO(1L, "test question", true);
 
-        when(questionManagementService.returnMatchedQuestion(anyString())).thenReturn(Optional.of(responseDTO));
+        when(questionManagementService.returnIdByQuestion(anyString())).thenReturn(Optional.of(responseDTO));
 
         // Act
         mockMvc.perform(post("/demo")
@@ -200,7 +203,7 @@ public class RestControllerTest {
         long id = 1L;
         RequestAnswerDTO requestAnswerDTO = new RequestAnswerDTO(true);
 
-        when(questionManagementService.getQuestion(id)).thenReturn(Optional.empty());
+        when(questionManagementService.returnQuestion(id)).thenReturn(Optional.empty());
 
         mockMvc.perform(put("/demo/" + id)
                         .accept(MediaType.APPLICATION_JSON)
@@ -220,7 +223,6 @@ public class RestControllerTest {
         ResponseDTO responseDTO_temp = new ResponseDTO(1L, answeredQuestion.get().question(), answeredQuestion.get().answer());
         Optional<ResponseDTO> responseDTO = Optional.of(responseDTO_temp);
 
-        when(questionManagementService.getQuestion(id)).thenReturn(answeredQuestion);
         when(questionManagementService.returnQuestion(id)).thenReturn(responseDTO);
 
         mockMvc.perform(put("/demo/" + id)

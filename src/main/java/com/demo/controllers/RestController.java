@@ -1,6 +1,7 @@
 package com.demo.controllers;
 
 import com.demo.dto.*;
+import com.demo.exceptions.ErrorCode;
 import com.demo.model.AnsweredQuestion;
 import com.demo.service.QuestionManagementService;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class RestController {
             return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
         }
 
-        Optional<ResponseDTO> matchedQuestion = questionManagementService.returnMatchedQuestion(requestDTO.question());
+        Optional<ResponseDTO> matchedQuestion = questionManagementService.returnIdByQuestion(requestDTO.question());
 
         if (matchedQuestion.isPresent()) {
             logger.debug("question found");
@@ -39,8 +40,17 @@ public class RestController {
             logger.debug("question not found");
             questionManagementService.saveQuestion(new AnsweredQuestion(requestDTO.question(), new Random().nextBoolean()));
 
-            Optional <ResponseDTO> responseDTO = questionManagementService.returnIdByQuestion(requestDTO.question());
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+            Optional<ResponseDTO> responseDTO = questionManagementService.returnIdByQuestion(requestDTO.question());
+
+            if(responseDTO.isEmpty()){
+                logger.debug("database failed");
+
+                ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(ErrorCode.DATABASE_ERROR, "Database failed");
+
+                return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO.get());
         }
     }
 
@@ -68,17 +78,30 @@ public class RestController {
     }
 
     @PutMapping(value = "/demo/{id}", consumes = {"application/json"}, produces = {"application/json"})
-    ResponseEntity< Optional<ResponseDTO> > putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
+    ResponseEntity<ResponseDTO> putAnswer(@PathVariable long id, @RequestBody RequestAnswerDTO requestAnswerDTO) {
 
-        if (questionManagementService.getQuestion(id).isEmpty()){
+        Optional<ResponseDTO> responseDTOOptional = questionManagementService.returnQuestion(id);
+
+        if (responseDTOOptional.isEmpty()) {
             logger.error("This id doesn't exist");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        else {
-            ResponseDTO responseDTO = new ResponseDTO(id, questionManagementService.returnQuestion(id).get().question(), requestAnswerDTO.answer());
+        } else {
+
+            ResponseDTO responseDTO = new ResponseDTO(id, responseDTOOptional.get().question(), requestAnswerDTO.answer());
             questionManagementService.putAnswerIntoQuestion(responseDTO);
             logger.debug("question put correctly");
-            return ResponseEntity.status(HttpStatus.OK).body((questionManagementService.returnQuestion(id)));
+
+            Optional<ResponseDTO> responseDTO_temp = questionManagementService.returnQuestion(id);
+
+            if (responseDTO_temp.isEmpty()) {
+                logger.error("This id doesn't exist");
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            } else {
+
+                return ResponseEntity.status(HttpStatus.OK).body(responseDTO_temp.get());
+            }
+
         }
     }
 }

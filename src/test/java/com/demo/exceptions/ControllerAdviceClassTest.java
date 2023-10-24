@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ControllerAdviceClassTest {
@@ -43,14 +44,29 @@ class ControllerAdviceClassTest {
 
     @Test
     public void HandleMyException() throws Exception {
+        when(customizedExceptionMock.getCode()).thenReturn(ErrorCode.DATABASE_ERROR);
 
         ResponseEntity<Object> response = controllerAdviceClass.handleMyException(customizedExceptionMock, webRequestMock);
 
         ErrorResponseDTO errorResponseDTO = (ErrorResponseDTO) response.getBody();
 
         assertNotNull(errorResponseDTO);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
-        assertEquals("Your question is missing or empty", errorResponseDTO.description());
+        assertEquals(ErrorCode.DATABASE_ERROR, errorResponseDTO.error());
+    }
+
+    @Test
+    public void HandleMyException_technicalError() throws Exception {
+        when(customizedExceptionMock.getCode()).thenReturn(ErrorCode.TECHNICAL_ERROR);
+
+        ResponseEntity<Object> response = controllerAdviceClass.handleMyException(customizedExceptionMock, webRequestMock);
+
+        ErrorResponseDTO errorResponseDTO = (ErrorResponseDTO) response.getBody();
+
+        assertNotNull(errorResponseDTO);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+
+        assertEquals(ErrorCode.TECHNICAL_ERROR, errorResponseDTO.error());
     }
 }

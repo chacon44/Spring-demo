@@ -20,11 +20,16 @@ public class ControllerAdviceClass extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.METHOD_NOT_ALLOWED);
     }
-    @ExceptionHandler(CustomizedException.class)
-    public ResponseEntity<Object> handleMyException(CustomizedException ex, WebRequest request) throws Exception {
-        return super.handleException(ex, request);
-    }
 
+    @ExceptionHandler(CustomizedException.class)
+    public ResponseEntity<Object> handleMyException(CustomizedException ex, WebRequest request){
+        if (ex.getCode() == ErrorCode.DATABASE_ERROR) {
+            logger.debug("Database error");
+            return ResponseEntity.internalServerError().body(new ErrorResponseDTO(ErrorCode.DATABASE_ERROR, "Database error"));
+        } else {
+            return ResponseEntity.internalServerError().body(new ErrorResponseDTO(ErrorCode.TECHNICAL_ERROR, "Unexpected error"));
+        }
+    }
 
 
 }
